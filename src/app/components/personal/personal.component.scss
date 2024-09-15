@@ -1,0 +1,21 @@
+.tileLabel {
+    background: #e0e0e0;
+    padding: 10px;
+    text-align: center;
+    border-radius: 5px;
+    position: relative;
+    color: teal;
+    margin-bottom: 10px;
+    cursor: pointer;
+  }
+
+.details-container {
+  width: 80%;
+  margin: auto;
+  font-family: Arial, sans-serif;
+}
+
+.highlightedLabel {
+  background: #0f5987;
+  color: white;
+}

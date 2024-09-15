@@ -1,0 +1,153 @@
+.container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.image-wrapper {
+  position: relative;
+  width: 260px; /* Adjust size as needed */
+  height: 370px; /* Adjust size as needed */
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  background-image: url('/assets/Nyssa.jpeg');
+  background-position: center;
+  background-repeat: no-repeat;
+  border: 5px solid transparent; /* Invisible border */
+  border-radius: 15px; /* Rounded corners */
+  padding: 5px; /* Space between the image and the border */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow effect */
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.centered-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white; /* Text color */
+  font-size: 1.5em; /* Text size */
+  text-align: center; /* Center text horizontally */
+  padding: 10px; /* Add some padding if needed */
+}
+
+.image.active {
+  transform: scale(1.1);
+}
+
+.splash-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px; /* Adjust size as needed */
+  height: 300px; /* Adjust size as needed */
+  pointer-events: none;
+}
+
+.splash {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: all;
+  clip-path: polygon(51% 28%, 68% 9%, 90% 15%, 97% 42%, 80% 72%, 53% 93%, 25% 74%, 5% 42%, 13% 14%, 38% 9%);
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+
+@keyframes splashExpand {
+  from {
+    width: 0;
+    height: 0;
+    opacity: 1;
+  }
+  to {
+    width: 150px;
+    height: 150px;
+    opacity: 1;
+  }
+}
+
+@keyframes splashMove1 {
+  from {
+    transform: translate(0, 0);
+  }
+  to {
+    transform: translate(-150px, -150px);
+  }
+}
+
+@keyframes splashMove2 {
+  from {
+    transform: translate(0, 0);
+  }
+  to {
+    transform: translate(150px, -150px);
+  }
+}
+
+@keyframes splashMove3 {
+  from {
+    transform: translate(0, 0);
+  }
+  to {
+    transform: translate(-150px, 150px);
+  }
+}
+
+@keyframes splashMove4 {
+  from {
+    transform: translate(0, 0);
+  }
+  to {
+    transform: translate(150px, 150px);
+  }
+}
+
+@keyframes splashMove5 {
+  from {
+    transform: translate(0, 0);
+  }
+  to {
+    transform: translate(-200px, 200px);
+  }
+}
+
+@keyframes splashMove6 {
+  from {
+    transform: translate(0, 0);
+  }
+  to {
+    transform: translate(200px, -200px);
+  }
+}
+
+.splash:nth-child(1) {
+  animation: splashExpand 1s forwards, splashMove1 1s forwards;
+}
+.splash:nth-child(2) {
+  animation: splashExpand 1s 0.2s forwards, splashMove2 1s 0.2s forwards;
+}
+.splash:nth-child(3) {
+  animation: splashExpand 1s 0.4s forwards, splashMove3 1s 0.4s forwards;
+}
+.splash:nth-child(4) {
+  animation: splashExpand 1s 0.6s forwards, splashMove4 1s 0.6s forwards;
+}
+.splash:nth-child(5) {
+  animation: splashExpand 1s 0.8s forwards, splashMove5 1s 0.8s forwards;
+}
+.splash:nth-child(6) {
+  animation: splashExpand 1s 1s forwards, splashMove6 1s 1s forwards;
+}
+

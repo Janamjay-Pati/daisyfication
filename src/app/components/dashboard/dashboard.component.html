@@ -1,0 +1,12 @@
+<div class="container">
+    <div class="image-wrapper" (click)="triggerAnimation()">
+      <div class="image" [ngClass]="{'active': isActive}"></div>
+      <div class="splash-container" *ngIf="isActive">
+        <div *ngFor="let splash of splashes" class="splash" 
+             [ngStyle]="{'top': splash.top, 'left': splash.left, 'background-color': splash.color, 'transform': splash.transform}"
+             (click)="onSplashClick(splash)">
+             <div class="centered-text">{{ splash.title }}</div>
+        </div>
+      </div>
+    </div>
+  </div>

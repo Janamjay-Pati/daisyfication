@@ -1,0 +1,61 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f0f0; /* Light background */
+  }
+  
+  .calendar-header {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .calendar-body {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .calendar-month {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+  }
+  
+  .calendar-grid div {
+    background: #e0e0e0;
+    color: #0f5987;
+    padding: 10px;
+    text-align: center;
+    border-radius: 5px;
+    position: relative;
+  }
+  
+  .calendar-grid div.important-date {
+    background: #0f5987; /* Highlight important dates */
+    color: white;
+  }
+  
+  .tooltip {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: #333;
+    color: #fff;
+    padding: 5px;
+    border-radius: 3px;
+    font-size: 0.75em;
+    display: none;
+    color: rgb(18, 142, 135);
+  }
+  
+  .calendar-grid div.important-date:hover .tooltip {
+    display: block;
+  }
+  

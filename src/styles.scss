@@ -1,1 +1,13 @@
 /* You can add global styles to this file, and also import other style files */
+body {
+    background: linear-gradient(
+      to bottom,
+      #000000, /* Starting color (hex code) */
+      #1e95b0  /* Ending color (hex code) */
+  );
+  color: white;
+  width: 100vw; /* Full viewport width */
+  height: 100vh; /* Full viewport height */
+  background-size: cover;
+  background-attachment: fixed;
+}

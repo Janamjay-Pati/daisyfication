@@ -1,0 +1,53 @@
+.image-gallery {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 columns */
+    gap: 10px; /* Space between items */
+    width: 100%; /* Ensure full width */
+    max-width: 1200px; /* Optional: set a max-width for better control */
+    margin: 0 auto; /* Center the gallery in its parent container */
+    margin-top: 20px;
+  }
+  
+  .image-item {
+    display: flex;
+    background-size: cover; /* Cover the entire div */
+    background-position: center; /* Center the image */
+    height: 370px; /* Set a height for the divs */
+    justify-content: center;
+  }
+  
+.image-container {
+    position: relative;
+    width: 260px; /* Adjust size as needed */
+    height: 370px; /* Adjust size as needed */
+    overflow: hidden; /* Ensures no content overflows */
+  }
+  
+  .image-container::before {
+    content: ""; /* Empty content to apply the background image */
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('/assets/Nyssa.jpeg');
+    background-size: cover; /* Cover the entire container */
+    background-position: center; /* Center the image */
+    filter: blur(8px); /* Apply the blur */
+    z-index: -1; /* Ensure it stays behind the text */
+  }
+  
+  .text-overlay {
+    position: relative; /* Ensure it's positioned inside the container */
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* Optional: Add shadow for better contrast */
+    text-align: center;
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Center perfectly */
+    z-index: 1; /* Keep the text above the background */
+  }
+  
+  

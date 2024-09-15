@@ -1,0 +1,8 @@
+<div class="details-container">
+    <div class="tileLabel" [ngClass]="{'highlightedLabel': isSectionSelected('importantDates')}" (click)="toggleSection('importantDates')">Important Dates</div>
+    <div class="tileLabel" [ngClass]="{'highlightedLabel': isSectionSelected('myBookWorld')}" (click)="toggleSection('myBookWorld')">My Book World</div>
+
+    <!-- Sections -->
+    <app-my-calendar *ngIf="isSectionSelected('importantDates')"></app-my-calendar>
+    <app-my-book-world *ngIf="isSectionSelected('myBookWorld')"></app-my-book-world>
+</div>
