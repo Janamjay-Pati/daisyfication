@@ -1,5 +1,19 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { db } from './../../services/firebase.service';
+import { collection, getDocs } from 'firebase/firestore';
+
+interface ImportantDate {
+  date: number;  // Day of the month
+  desc: string;  // Description
+}
+
+interface Month {
+  name: string;
+  monthCount: number;
+  days: number;
+  importantDates: ImportantDate[]; // Now TypeScript knows this is an array of ImportantDate objects
+}
 
 @Component({
   selector: 'app-my-calendar',
@@ -8,126 +22,72 @@ import { Component } from '@angular/core';
   templateUrl: './my-calendar.component.html',
   styleUrl: './my-calendar.component.scss'
 })
-export class MyCalendarComponent {
-  importantDates = [
-    // Birthdays
-    new Date('2024-09-16'),
-    new Date('2024-07-19'),
-    new Date('2024-05-1'),
-    new Date('2024-01-5'),
-    new Date('2024-06-9'),
-    new Date('2024-05-7'),
-    new Date('2024-10-21'),
-    new Date('2024-07-22'),
-    new Date('2024-02-7'),
-    new Date('2024-04-3'),
-    new Date('2024-12-23'),
-    new Date('2024-08-24'),
-    new Date('2024-07-3'),
-    new Date('2024-12-7'),
-    new Date('2024-09-1'),
-    new Date('2024-12-30'),
-    new Date('2024-10-13'),
-    new Date('2024-12-4'),
-    new Date('2024-09-12'),
-    new Date('2024-02-18'),
-    new Date('2024-03-9'),
-    new Date('2024-11-14'),
-    
-    // Anniversary's
-    new Date('2024-09-5'),
-    new Date('2024-09-2'),
-    new Date('2024-02-21'),
-    new Date('2024-06-17'),
-    new Date('2024-06-13'),
-    new Date('2024-05-31'),
-    new Date('2024-02-25'),
-    new Date('2024-12-10'),
-  ];
 
-  importantDates1 = [
-    // Birthdays
-    {date: new Date('2024-09-16'), desc: "My Birthday"},
-    {date: new Date('2024-07-19'), desc: "Janam's Birthday"},
-    {date: new Date('2024-05-1'), desc: "Nisha Di's Birthday"},
-    {date: new Date('2024-01-5'), desc: "Kiyansh's Birthday"},
-    {date: new Date('2024-06-9'), desc: "Souj and Anujna's Birthday"},
-    {date: new Date('2024-05-7'), desc: "Anusha's Birthday"},
-    {date: new Date('2024-10-21'), desc: "Manisha's Birthday"},
-    {date: new Date('2024-07-22'), desc: "Krishna's Birthday"},
-    {date: new Date('2024-02-7'), desc: "Abhijna's Birthday"},
-    {date: new Date('2024-04-3'), desc: "Suraksha's Birthday"},
-    {date: new Date('2024-12-23'), desc: "Harshitha's Birthday"},
-    {date: new Date('2024-08-24'), desc: "Deekshitha's Birthday"},
-    {date: new Date('2024-07-3'), desc: "Nanami's Birthday"},
-    {date: new Date('2024-12-7'), desc: "Gojo's Birthday"},
-    {date: new Date('2024-09-1'), desc: "Jk's Birthday"},
-    {date: new Date('2024-12-30'), desc: "V's Birthdatay"},
-    {date: new Date('2024-10-13'), desc: "Jimin's Birthday"},
-    {date: new Date('2024-12-4'), desc: "Jin's Birthday"},
-    {date: new Date('2024-09-12'), desc: "RM's Birthday"},
-    {date: new Date('2024-02-18'), desc: "JHope's Birthday"},
-    {date: new Date('2024-03-9'), desc: "Suga's Birthday"},
-    {date: new Date('2024-11-14'), desc: "Guru Bhaiya's Birthday"},
-    
-    // Anniversary's
-    {date: new Date('2024-09-5'), desc: "Our Anniversary"},
-    {date: new Date('2024-09-2'), desc: "I Love you Day"},
-    {date: new Date('2024-02-21'), desc: "My Work Anniversary"},
-    {date: new Date('2024-06-17'), desc: "Janam's Work Anniversary"},
-    {date: new Date('2024-06-13'), desc: "BTS Anniversary"},
-    {date: new Date('2024-05-31'), desc: "Dad Mom's Marriage Anniversary"},
-    {date: new Date('2024-12-10'), desc: "Maternal Uncle Aunt's Marriage Anniversary"},
-    {date: new Date('2024-02-25'), desc: "Souj's Work Anniversary"},
+export class MyCalendarComponent implements OnInit {
+  months: Month[] = [
+    { name: 'January', monthCount: 0, days: new Date(new Date().getFullYear(), 1, 0).getDate(), importantDates: [] }, // January
+    { name: 'February', monthCount: 1, days: new Date(new Date().getFullYear(), 2, 0).getDate(), importantDates: [] }, // February
+    { name: 'March', monthCount: 2, days: new Date(new Date().getFullYear(), 3, 0).getDate(), importantDates: [] }, // March
+    { name: 'April', monthCount: 3, days: new Date(new Date().getFullYear(), 4, 0).getDate(), importantDates: [] }, // April
+    { name: 'May', monthCount: 4, days: new Date(new Date().getFullYear(), 5, 0).getDate(), importantDates: [] }, // May
+    { name: 'June', monthCount: 5, days: new Date(new Date().getFullYear(), 6, 0).getDate(), importantDates: [] }, // June
+    { name: 'July', monthCount: 6, days: new Date(new Date().getFullYear(), 7, 0).getDate(), importantDates: [] }, // July
+    { name: 'August', monthCount: 7, days: new Date(new Date().getFullYear(), 8, 0).getDate(), importantDates: [] }, // August
+    { name: 'September', monthCount: 8, days: new Date(new Date().getFullYear(), 9, 0).getDate(), importantDates: [] }, // September
+    { name: 'October', monthCount: 9, days: new Date(new Date().getFullYear(), 10, 0).getDate(), importantDates: [] }, // October
+    { name: 'November', monthCount: 10, days: new Date(new Date().getFullYear(), 11, 0).getDate(), importantDates: [] }, // November
+    { name: 'December', monthCount: 11, days: new Date(new Date().getFullYear(), 12, 0).getDate(), importantDates: [] } // December
   ];
+  
+  ngOnInit(): void {
+    this.getData();
+  }
 
-  months = [
-    { name: 'January', days: this.generateMonthDays(1) },
-    { name: 'February', days: this.generateMonthDays(2) },
-    { name: 'March', days: this.generateMonthDays(3) },
-    { name: 'April', days: this.generateMonthDays(4) },
-    { name: 'May', days: this.generateMonthDays(5) },
-    { name: 'June', days: this.generateMonthDays(6) },
-    { name: 'July', days: this.generateMonthDays(7) },
-    { name: 'August', days: this.generateMonthDays(8) },
-    { name: 'September', days: this.generateMonthDays(9) },
-    { name: 'October', days: this.generateMonthDays(10) },
-    { name: 'November', days: this.generateMonthDays(11) },
-    { name: 'December', days: this.generateMonthDays(12) }
-  ];
-
-  generateMonthDays(month: number) {
-    // Generate days for each month, taking into account the number of days
-    const days = [];
-    const date = new Date(2024, month - 1, 1);
-    while (date.getMonth() === month - 1) {
-      if (this.isImportantDate(new Date(date))) {
-        days.push({ day: date.getDate(), date: new Date(date), desc: this.setDesc(new Date(date)) });
-      } else {
-        days.push({ day: date.getDate(), date: new Date(date) });
+  async getData() {
+    const importantDates: { monthCount: number, date: any; desc: any }[] = [];
+    const querySnapshot = await getDocs(collection(db, 'ImportantDates'));
+    querySnapshot.forEach((doc) => {
+      if (doc.exists()) {
+        const data = doc.data();
+        importantDates.push({ monthCount: data['date'].toDate().getMonth(), date: data['date'].toDate().getDate(), desc: data['description'] })
       }
-      date.setDate(date.getDate() + 1);
+    });
+    this.setImportantDates(importantDates);
+  }
+
+  setImportantDates(importantDates: any[]) {
+    this.months.forEach(month => {
+      importantDates.forEach(importantDate => {
+        if (importantDate.monthCount === month.monthCount) {
+          month.importantDates.push({ date: importantDate.date, desc: importantDate.desc })
+        }
+      })
+    })
+  }
+
+  isImportantDate(monthCount: number, date: number): boolean {
+    for (const month of this.months) {
+      if (month.monthCount === monthCount) {
+        for (const importantDate of month.importantDates) {
+          if (importantDate.date === date) {
+            return true;
+          }
+        }
+      }
     }
-    return days;
+    return false;
   }
 
-  isImportantDate(date: Date): boolean {
-    return this.importantDates.some(d => 
-      d.getFullYear() === date.getFullYear() &&
-      d.getMonth() === date.getMonth() &&
-      d.getDate() === date.getDate()
-    );
-  }
-
-  setDesc(date: Date) {
-    return this.importantDates1.find(importantDate => {
-      return importantDate.date.getFullYear() === date.getFullYear() &&
-      importantDate.date.getMonth() === date.getMonth() &&
-      importantDate.date.getDate() === date.getDate()
-    })?.desc;
-  }
-
-  showDateDetails(date: Date) {
-    console.log(`Details for ${date.toDateString()}`);
+  getImportantDateDescription(monthCount: number, date: number) {
+    for (const month of this.months) {
+      if (month.monthCount === monthCount) {
+        for (const importantDate of month.importantDates) {
+          if (importantDate.date === date) {
+            return importantDate.desc;
+          }
+        }
+      }
+    }
+    return null;
   }
 }
