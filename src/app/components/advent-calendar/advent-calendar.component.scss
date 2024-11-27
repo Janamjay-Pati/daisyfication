@@ -1,0 +1,115 @@
+/* Grid Layout */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 columns */
+    grid-template-rows: repeat(12, 370px); /* Fixed height for each row */
+    gap: 10px; /* Space between cards */
+    padding: 10px;
+    box-sizing: border-box;
+    height: 100vh; /* Make sure the grid fills the screen */
+    justify-items: center; /* Center the cards horizontally */
+    align-items: center; /* Center the cards vertically in each row */
+  }
+  
+  /* Image Container (Card) Styles */
+  .image-container {
+    position: relative;
+    width: 260px; /* Fixed width */
+    height: 370px; /* Fixed height */
+    overflow: hidden;
+    border-radius: 12px;
+    background-size: cover;
+    background-position: center;
+    // border: 2px solid #ccc; /* Border for visibility */
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Gift Wrap */
+  .gift-wrap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #fddde6; /* Light pink base */
+    z-index: 2;
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.6s ease, opacity 0.6s ease;
+  }
+  
+  /* Cross-Striped Pattern */
+  .stripe {
+    position: absolute;
+    background: linear-gradient(45deg, #fddde6 25%, #e35ca4 25%, #e35ca4 50%, #fddde6 50%, #fddde6 75%, #e35ca4 75%, #e35ca4 100%);
+    background-size: 40px 40px;
+  }
+  
+  .stripe.top {
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 30px;
+  }
+  
+  .stripe.bottom {
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 30px;
+  }
+  
+  .stripe.left {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 30px;
+  }
+  
+  .stripe.right {
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: 30px;
+  }
+  
+  /* Heart */
+  .heart {
+    position: relative;
+    width: 60px;
+    height: 60px;
+    background-color: #e35ca4;
+    transform: rotate(-45deg);
+    margin-top: 10px;
+  }
+  
+  .heart::before,
+  .heart::after {
+    content: '';
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background-color: #e35ca4;
+    border-radius: 50%;
+  }
+  
+  .heart::before {
+    left: 0;
+    top: -30px;
+  }
+  
+  .heart::after {
+    top: 0;
+    left: 30px;
+  }
+  
+  /* Unwrap animation */
+  .gift-wrap.animate {
+    transform: scale(0.5) rotate(30deg) translateY(-100vh);
+    opacity: 0;
+    pointer-events: none;
+  }

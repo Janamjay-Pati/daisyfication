@@ -1,0 +1,17 @@
+<div class="grid-container">
+    <!-- Loop through cards array and create a grid -->
+    <div 
+      class="image-container" 
+      *ngFor="let card of cards; let i = index" 
+      [ngStyle]="{'background-image': 'url(' + card.image + ')'}">
+      
+      <!-- Gift Wrap -->
+      <div class="gift-wrap" (click)="unwrapGift(i)">
+        <div class="stripe top"></div>
+        <div class="stripe bottom"></div>
+        <div class="stripe left"></div>
+        <div class="stripe right"></div>
+        <div class="heart"></div>
+      </div>
+    </div>
+  </div>
