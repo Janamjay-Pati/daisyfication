@@ -1,17 +1,25 @@
 <div class="grid-container">
-    <!-- Loop through cards array and create a grid -->
-    <div 
-      class="image-container" 
-      *ngFor="let card of cards; let i = index" 
-      [ngStyle]="{'background-image': 'url(' + card.image + ')'}">
-      
-      <!-- Gift Wrap -->
-      <div class="gift-wrap" (click)="unwrapGift(i)">
-        <div class="stripe top"></div>
-        <div class="stripe bottom"></div>
-        <div class="stripe left"></div>
-        <div class="stripe right"></div>
-        <div class="heart"></div>
+  <!-- Loop through rows -->
+  <div *ngFor="let row of groupedCards; let rowIndex = index" class="row-container">
+    <!-- Month name -->
+    <div class="topic">{{ months[rowIndex] }}</div>
+    
+    <!-- Cards in the current row -->
+    <div class="cards-row">
+      <div 
+        class="image-container" 
+        *ngFor="let card of row" 
+        [ngStyle]="{'background-image': 'url(' + card.image + ')'}">
+        
+        <!-- Gift Wrap -->
+        <div class="gift-wrap" (click)="unwrapGift(rowIndex, row.indexOf(card))">
+          <div class="stripe top"></div>
+          <div class="stripe bottom"></div>
+          <div class="stripe left"></div>
+          <div class="stripe right"></div>
+          <div class="heart"></div>
+        </div>
       </div>
     </div>
   </div>
+</div>

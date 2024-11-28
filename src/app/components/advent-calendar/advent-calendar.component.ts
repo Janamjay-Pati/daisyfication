@@ -6,27 +6,37 @@ import { Component } from '@angular/core';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './advent-calendar.component.html',
-  styleUrl: './advent-calendar.component.scss'
+  styleUrls: ['./advent-calendar.component.scss']
 })
 export class AdventCalendarComponent {
-  // Array with 36 cards, each with an image path
+  // Array of 36 cards, each with an image path
   cards = Array.from({ length: 36 }, (_, i) => ({
-    image: `/assets/Nyssa.jpeg` // Make sure the image files exist in the assets folder
+    image: `/assets/Nyssa.jpeg`
   }));
 
-  // To track if the gift has been unwrapped
-  isUnwrapped = false;
+  // Generate an array of month names
+  months = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
 
-  // Method to trigger unwrap animation
-  unwrapGift(index: number): void {
-    console.log('Unwrapping gift at index:', index); // Debugging log
-    const giftWrap = document.querySelectorAll('.gift-wrap')[index] as HTMLElement;
+  // Group cards into rows (e.g., one row per month)
+  groupedCards: { image: string }[][] = this.cards.reduce((rows, card, index) => {
+    const rowIndex = Math.floor(index / 3); // Adjust 3 to the number of columns per row
+    if (!rows[rowIndex]) rows[rowIndex] = [];
+    rows[rowIndex].push(card);
+    return rows;
+  }, [] as { image: string }[][]); // Explicitly type as an array of arrays of card objects
+
+  // Unwrap a gift card
+  unwrapGift(rowIndex: number, cardIndex: number): void {
+    console.log(`Unwrapping gift at row ${rowIndex}, card ${cardIndex}`);
+    const giftWrap = document.querySelectorAll('.gift-wrap')[rowIndex * 3 + cardIndex] as HTMLElement;
     if (giftWrap) {
-      giftWrap.classList.add('animate'); // Add animation class
+      giftWrap.classList.add('animate');
       setTimeout(() => {
-        this.isUnwrapped = true; // Update state after animation
+        console.log('Gift unwrapped!');
       }, 600);
     }
   }
-
 }

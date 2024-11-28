@@ -1,28 +1,41 @@
 /* Grid Layout */
 .grid-container {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 3 columns */
-    grid-template-rows: repeat(12, 370px); /* Fixed height for each row */
-    gap: 10px; /* Space between cards */
-    padding: 10px;
-    box-sizing: border-box;
-    height: 100vh; /* Make sure the grid fills the screen */
-    justify-items: center; /* Center the cards horizontally */
-    align-items: center; /* Center the cards vertically in each row */
-  }
-  
-  /* Image Container (Card) Styles */
-  .image-container {
-    position: relative;
-    width: 260px; /* Fixed width */
-    height: 370px; /* Fixed height */
-    overflow: hidden;
-    border-radius: 12px;
-    background-size: cover;
-    background-position: center;
-    // border: 2px solid #ccc; /* Border for visibility */
-    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
-  }
+  display: flex;
+  flex-direction: column;
+  gap: 20px; // Space between rows
+}
+
+.row-container {
+  display: flex;
+  flex-direction: column; // Stack topic and cards vertically
+  gap: 10px;              // Space between topic and cards
+}
+
+.topic {
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 10px; // Space between topic and cards-row
+}
+
+.cards-row {
+  display: flex;
+  flex-wrap: wrap;        // Ensure cards wrap if needed
+  gap: 195px;              // Space between cards (keeps the original spacing)
+  justify-content: center; // Center-align cards
+}
+
+/* Image Container (Card) Styles */
+.image-container {
+  position: relative;
+  width: 260px; /* Fixed width */
+  height: 370px; /* Fixed height */
+  overflow: hidden;
+  border-radius: 12px;
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
+}
   
   /* Gift Wrap */
   .gift-wrap {
