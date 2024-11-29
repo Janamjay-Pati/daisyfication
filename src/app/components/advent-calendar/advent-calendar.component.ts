@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, QueryList, ViewChildren } from '@angular/core';
 
 @Component({
   selector: 'app-advent-calendar',
@@ -8,17 +8,81 @@ import { Component } from '@angular/core';
   templateUrl: './advent-calendar.component.html',
   styleUrls: ['./advent-calendar.component.scss']
 })
-export class AdventCalendarComponent {
+export class AdventCalendarComponent implements AfterViewInit {
   // Array of 36 cards, each with an image path
-  cards = Array.from({ length: 36 }, (_, i) => ({
-    image: `/assets/Nyssa.jpeg`
-  }));
+  cards = [
+    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg` },
+    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg` },
+    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg` },
+    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg` },
+    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg` },
+    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg` },
+    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg` },
+    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg` },
+    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg` },
+    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg` },
+    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg` },
+    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg` },
+    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg` },
+    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg` },
+    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg` },
+    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg` },
+    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg` },
+    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg` },
+    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg` },
+    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg` },
+    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg` },
+    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg` },
+    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg` },
+    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg` },
+    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg` },
+    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg` },
+    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg` },
+    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg` },
+    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg` },
+    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg` },
+    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg` },
+    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg` },
+    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg` },
+    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg` },
+    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg` },
+    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg` },
+  ]
 
   // Generate an array of month names
   months = [
     'January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December'
   ];
+  @ViewChildren('stars', { read: ElementRef })
+  stars!: QueryList<ElementRef>; // Use ElementRef to access nativeElement
+
+
+  ngAfterViewInit() {
+    // Wait until all view children are initialized
+    this.stars.forEach((starContainerRef) => {
+      const stars = starContainerRef.nativeElement.querySelectorAll('.star');
+      const cardIndex = starContainerRef.nativeElement.getAttribute('data-card-index');  // Get the card index
+
+      // Add hover event to each star within the card
+      stars.forEach((star: any, starIndex: any) => {
+        star.addEventListener('mouseenter', () => {
+          console.log('Hovered on Card:', cardIndex, 'Star:', starIndex + 1); // Display which card and star is hovered
+          // Add the "lit-up" class to the hovered star and all previous stars within the same card
+          for (let i = 0; i <= starIndex; i++) {
+            stars[i].classList.add('lit-up');
+          }
+        });
+
+        star.addEventListener('mouseleave', () => {
+          // Remove the "lit-up" class from all stars within the same card
+          for (let i = 0; i < stars.length; i++) {
+            stars[i].classList.remove('lit-up');
+          }
+        });
+      });
+    });
+  }
 
   // Group cards into rows (e.g., one row per month)
   groupedCards: { image: string }[][] = this.cards.reduce((rows, card, index) => {
