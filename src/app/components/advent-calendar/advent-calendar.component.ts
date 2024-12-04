@@ -154,45 +154,41 @@ export class AdventCalendarComponent implements OnInit, AfterViewInit {
 
   unwrapGift(rowIndex: number, cardIndex: number): void {
     console.log(`Unwrapping gift at row ${rowIndex}, card ${cardIndex}`);
+
+    // Calculate the global index of the card
     const globalCardIndex = rowIndex * 3 + cardIndex;
     const card = this.cards[globalCardIndex];
-    
-    // Toggle the isWrapped value
-    card.isWrapped = false;
 
-    // Find the document by card name
-    const cardName = card.name;
-    const cardQuery = query(collection(db, 'AdventCalendarCards'), where('name', '==', cardName));
+    // Ensure card is in the expected "wrapped" state
+    if (card.isWrapped) {
+      // Set isWrapped to false for this card locally
+      card.isWrapped = false;
 
-    getDocs(cardQuery).then(querySnapshot => {
-      if (!querySnapshot.empty) {
-        const cardDocRef = querySnapshot.docs[0].ref;
+      // Find the document by card name (or any other unique identifier)
+      const cardName = card.name;
+      const cardQuery = query(collection(db, 'AdventCalendarCards'), where('name', '==', cardName));
 
-        // Update the isWrapped field in Firestore
-        updateDoc(cardDocRef, {
-          isWrapped: false
-        })
-        .then(() => {
-          console.log('Gift unwrapped in Firestore!');
-        })
-        .catch((error) => {
-          console.error('Error unwrapping gift: ', error);
-        });
-      } else {
-        console.error('Card not found with name: ', cardName);
-      }
-    })
-    .catch((error) => {
-      console.error('Error querying Firestore: ', error);
-    });
+      getDocs(cardQuery).then(querySnapshot => {
+        if (!querySnapshot.empty) {
+          const cardDocRef = querySnapshot.docs[0].ref;
 
-    // Find the gift wrap element and apply animation (if necessary)
-    const giftWrap = document.querySelectorAll('.gift-wrap')[globalCardIndex] as HTMLElement;
-    if (giftWrap) {
-      giftWrap.classList.add('animate');
-      setTimeout(() => {
-        console.log('Gift unwrapped!');
-      }, 600);
+          // Update the Firestore document to set isWrapped to false
+          updateDoc(cardDocRef, {
+            isWrapped: false
+          })
+          .then(() => {
+            console.log('Gift unwrapped in Firestore!');
+          })
+          .catch((error) => {
+            console.error('Error unwrapping gift in Firestore: ', error);
+          });
+        } else {
+          console.error('Card not found with name: ', cardName);
+        }
+      })
+      .catch((error) => {
+        console.error('Error querying Firestore: ', error);
+      });
     }
   }
 }
