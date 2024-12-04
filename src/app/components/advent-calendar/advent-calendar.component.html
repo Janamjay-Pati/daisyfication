@@ -21,12 +21,15 @@
         </div>
 
         <!-- Stars (add card index for tracking) -->
-        <div class="stars" #stars [attr.data-card-index]="cardIndex">
-          <div class="star"></div>
-          <div class="star"></div>
-          <div class="star"></div>
-          <div class="star"></div>
-          <div class="star"></div>
+        <div 
+          class="stars" 
+          #stars 
+          [attr.data-card-index]="rowIndex * 3 + cardIndex">
+          <div 
+            class="star" 
+            *ngFor="let star of [1, 2, 3, 4, 5]; let starIndex = index"
+            (click)="selectStars(rowIndex * 3 + cardIndex, starIndex + 1)">
+          </div>
         </div>
       </div>
     </div>
