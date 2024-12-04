@@ -1,5 +1,4 @@
 <div class="grid-container">
-  <!-- Loop through rows -->
   <div *ngFor="let row of groupedCards; let rowIndex = index" class="row-container">
     <!-- Month name -->
     <div class="topic">{{ months[rowIndex] }}</div>
@@ -7,24 +6,23 @@
     <!-- Cards in the current row -->
     <div class="cards-row">
       <div 
-        class="image-container" 
         *ngFor="let card of row; let cardIndex = index" 
-        [ngStyle]="{'background-image': 'url(' + card.image + ')'}">
+        class="card-container">
         
-        <!-- Gift Wrap (Only show if isWrapped is true) -->
-        <div *ngIf="card.isWrapped" class="gift-wrap" (click)="unwrapGift(rowIndex, cardIndex)">
-          <div class="stripe top"></div>
-          <div class="stripe bottom"></div>
-          <div class="stripe left"></div>
-          <div class="stripe right"></div>
-          <div class="heart"></div>
+        <!-- Card Image and Wrapper (gift wrap, etc.) -->
+        <div class="image-container" [ngStyle]="{'background-image': 'url(' + card.image + ')'}">
+          <!-- Gift Wrap -->
+          <div class="gift-wrap" *ngIf="card.isWrapped" (click)="unwrapGift(rowIndex, cardIndex)">
+            <div class="stripe top"></div>
+            <div class="stripe bottom"></div>
+            <div class="stripe left"></div>
+            <div class="stripe right"></div>
+            <div class="heart"></div>
+          </div>
         </div>
 
-        <!-- Stars -->
-        <div 
-          class="stars" 
-          #stars 
-          [attr.data-card-index]="rowIndex * 3 + cardIndex">
+        <!-- Stars below the card -->
+        <div class="stars" [attr.data-card-index]="rowIndex * 3 + cardIndex">
           <div 
             class="star" 
             *ngFor="let star of [1, 2, 3, 4, 5]; let starIndex = index"
