@@ -7,6 +7,7 @@ interface Card {
   name: string;
   image: string;
   rating: number;
+  isWrapped: boolean;
 }
 
 @Component({
@@ -38,7 +39,8 @@ export class AdventCalendarComponent implements OnInit, AfterViewInit {
       return { 
         name: data['name'], 
         image: data['image'], 
-        rating: data['rating'] || 0 
+        rating: data['rating'] || 0,
+        isWrapped: data['isWrapped']
       };
     });
 
@@ -152,8 +154,40 @@ export class AdventCalendarComponent implements OnInit, AfterViewInit {
 
   unwrapGift(rowIndex: number, cardIndex: number): void {
     console.log(`Unwrapping gift at row ${rowIndex}, card ${cardIndex}`);
-    const cardIndexInDOM = rowIndex * this.groupedCards[0].length + cardIndex; // Adjust based on grouping
-    const giftWrap = document.querySelectorAll('.gift-wrap')[cardIndexInDOM] as HTMLElement;
+    const globalCardIndex = rowIndex * 3 + cardIndex;
+    const card = this.cards[globalCardIndex];
+    
+    // Toggle the isWrapped value
+    card.isWrapped = false;
+
+    // Find the document by card name
+    const cardName = card.name;
+    const cardQuery = query(collection(db, 'AdventCalendarCards'), where('name', '==', cardName));
+
+    getDocs(cardQuery).then(querySnapshot => {
+      if (!querySnapshot.empty) {
+        const cardDocRef = querySnapshot.docs[0].ref;
+
+        // Update the isWrapped field in Firestore
+        updateDoc(cardDocRef, {
+          isWrapped: false
+        })
+        .then(() => {
+          console.log('Gift unwrapped in Firestore!');
+        })
+        .catch((error) => {
+          console.error('Error unwrapping gift: ', error);
+        });
+      } else {
+        console.error('Card not found with name: ', cardName);
+      }
+    })
+    .catch((error) => {
+      console.error('Error querying Firestore: ', error);
+    });
+
+    // Find the gift wrap element and apply animation (if necessary)
+    const giftWrap = document.querySelectorAll('.gift-wrap')[globalCardIndex] as HTMLElement;
     if (giftWrap) {
       giftWrap.classList.add('animate');
       setTimeout(() => {

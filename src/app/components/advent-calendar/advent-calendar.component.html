@@ -11,8 +11,8 @@
         *ngFor="let card of row; let cardIndex = index" 
         [ngStyle]="{'background-image': 'url(' + card.image + ')'}">
         
-        <!-- Gift Wrap -->
-        <div class="gift-wrap" (click)="unwrapGift(rowIndex, cardIndex)">
+        <!-- Gift Wrap (Only show if isWrapped is true) -->
+        <div *ngIf="card.isWrapped" class="gift-wrap" (click)="unwrapGift(rowIndex, cardIndex)">
           <div class="stripe top"></div>
           <div class="stripe bottom"></div>
           <div class="stripe left"></div>
@@ -20,7 +20,7 @@
           <div class="heart"></div>
         </div>
 
-        <!-- Stars (add card index for tracking) -->
+        <!-- Stars -->
         <div 
           class="stars" 
           #stars 
