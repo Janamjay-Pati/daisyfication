@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { OnInit, AfterViewInit, Component, ElementRef, QueryList, ViewChildren } from '@angular/core';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, query, updateDoc, where } from 'firebase/firestore';
 import { db } from '../../services/firebase.service';
 
 interface Card {
@@ -91,26 +91,67 @@ export class AdventCalendarComponent implements OnInit, AfterViewInit {
     });
   }
 
-  selectStars(globalCardIndex: number, selectedStars: number): void {
+  selectStars(rowIndex: number, cardIndex: number, selectedStars: number): void {
+    // Calculate global card index
+    const globalCardIndex = rowIndex * 3 + cardIndex;
+
+    // Get the card's name (assuming it's unique)
+    const cardName = this.cards[globalCardIndex].name;
+
+    // Update the card's rating in local array
     this.cards[globalCardIndex].rating = selectedStars;
+
+    // Query the Firestore collection to find the document with this unique name
+    const cardQuery = query(collection(db, 'AdventCalendarCards'), where('name', '==', cardName));
+
+    getDocs(cardQuery).then(querySnapshot => {
+        if (!querySnapshot.empty) {
+            // There should only be one document with the name, so we take the first one
+            const cardDocRef = querySnapshot.docs[0].ref;
+
+            // Update the rating in Firestore
+            updateDoc(cardDocRef, {
+                rating: selectedStars
+            })
+            .then(() => {
+                console.log('Rating updated in Firestore!');
+            })
+            .catch((error) => {
+                console.error('Error updating rating: ', error);
+            });
+        } else {
+            console.error('Card not found with name: ', cardName);
+        }
+    })
+    .catch((error) => {
+        console.error('Error querying Firestore: ', error);
+    });
+
+    // Log the card details and selected stars for debugging
+    console.log('Card Clicked:', this.cards[globalCardIndex]);
+    console.log('Stars Selected:', selectedStars);
+    console.log('Row:', rowIndex, 'Card:', cardIndex, 'Star Selected:', selectedStars);
+
+    // Find the star container for this specific card
     const cardStars = this.stars.find(
       (ref) => parseInt(ref.nativeElement.getAttribute('data-card-index'), 10) === globalCardIndex
     );
 
     if (cardStars) {
-      const starElements = cardStars.nativeElement.querySelectorAll('.star');
-      starElements.forEach((star: HTMLElement, index: number) => {
-        if (index < selectedStars) {
-          star.classList.add('lit-up');
-        } else {
-          star.classList.remove('lit-up');
-        }
-      });
+        // Update the star visuals
+        const starElements = cardStars.nativeElement.querySelectorAll('.star');
+        starElements.forEach((star: HTMLElement, index: number) => {
+            if (index < selectedStars) {
+                star.classList.add('lit-up');
+            } else {
+                star.classList.remove('lit-up');
+            }
+        });
     }
-  }
+}
 
   unwrapGift(rowIndex: number, cardIndex: number): void {
-    console.log('Unwrapping gift at row ${rowIndex}, card ${cardIndex}');
+    console.log(`Unwrapping gift at row ${rowIndex}, card ${cardIndex}`);
     const cardIndexInDOM = rowIndex * this.groupedCards[0].length + cardIndex; // Adjust based on grouping
     const giftWrap = document.querySelectorAll('.gift-wrap')[cardIndexInDOM] as HTMLElement;
     if (giftWrap) {

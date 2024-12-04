@@ -28,7 +28,8 @@
           <div 
             class="star" 
             *ngFor="let star of [1, 2, 3, 4, 5]; let starIndex = index"
-            (click)="selectStars(rowIndex * 3 + cardIndex, starIndex + 1)">
+            [class.lit-up]="starIndex < card.rating"
+            (click)="selectStars(rowIndex, cardIndex, starIndex + 1)">
           </div>
         </div>
       </div>
