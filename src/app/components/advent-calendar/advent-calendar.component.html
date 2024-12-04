@@ -22,7 +22,7 @@
         </div>
 
         <!-- Stars below the card -->
-        <div class="stars" [attr.data-card-index]="rowIndex * 3 + cardIndex">
+        <div *ngIf="!card?.isWrapped" class="stars" [attr.data-card-index]="rowIndex * 3 + cardIndex">
           <div 
             class="star" 
             *ngFor="let star of [1, 2, 3, 4, 5]; let starIndex = index"
