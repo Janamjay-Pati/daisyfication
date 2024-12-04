@@ -1,5 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, QueryList, ViewChildren } from '@angular/core';
+import { OnInit, AfterViewInit, Component, ElementRef, QueryList, ViewChildren } from '@angular/core';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../../services/firebase.service';
+
+interface Card {
+  name: string;
+  image: string;
+  rating: number;
+}
 
 @Component({
   selector: 'app-advent-calendar',
@@ -8,82 +16,73 @@ import { AfterViewInit, Component, ElementRef, QueryList, ViewChildren } from '@
   templateUrl: './advent-calendar.component.html',
   styleUrls: ['./advent-calendar.component.scss']
 })
-export class AdventCalendarComponent implements AfterViewInit {
-  // Array of 36 cards, each with an image path
-  cards = [
-    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg`,rating: 1 },
-    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg`,rating: 4 },
-    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg`,rating: 0 },
-    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg`,rating: 0 },
-    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg`,rating: 0 },
-    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg`,rating: 0 },
-    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg`,rating: 0 },
-    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg`,rating: 0 },
-    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg`,rating: 0 },
-    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg`,rating: 0 },
-    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg`,rating: 0 },
-    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg`,rating: 0 },
-    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg`,rating: 0 },
-    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg`,rating: 0 },
-    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg`,rating: 0 },
-    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg`,rating: 0 },
-    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg`,rating: 0 },
-    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg`,rating: 0 },
-    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg`,rating: 0 },
-    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg`,rating: 0 },
-    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg`,rating: 0 },
-    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg`,rating: 0 },
-    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg`,rating: 0 },
-    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg`,rating: 0 },
-    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg`,rating: 0 },
-    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg`,rating: 0 },
-    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg`,rating: 0 },
-    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg`,rating: 0 },
-    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg`,rating: 0 },
-    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg`,rating: 0 },
-    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg`,rating: 0 },
-    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg`,rating: 0 },
-    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg`,rating: 0 },
-    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg`,rating: 0 },
-    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg`,rating: 0 },
-    { name: 'The Duchess Deal', image: `/assets/The_Duchess_Deal.jpeg`,rating: 0 },
-  ]
-
-  // Generate an array of month names
+export class AdventCalendarComponent implements OnInit, AfterViewInit {
+  cards: Card[] = [];
+  groupedCards: Card[][] = [];
   months = [
     'January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December'
   ];
-  @ViewChildren('stars', { read: ElementRef })
-  stars!: QueryList<ElementRef>; // Use ElementRef to access nativeElement
 
+  @ViewChildren('stars', { read: ElementRef })
+  stars!: QueryList<ElementRef>; 
+
+  ngOnInit(): void {
+    this.getData();
+  }
+
+  async getData() {
+    const querySnapshot = await getDocs(collection(db, 'AdventCalendarCards'));
+    this.cards = querySnapshot.docs.map((doc) => {
+      const data = doc.data();
+      return { 
+        name: data['name'], 
+        image: data['image'], 
+        rating: data['rating'] || 0 
+      };
+    });
+
+    this.groupCards(); // Group cards after fetching
+    console.log(this.cards);
+  }
+
+  groupCards(): void {
+    const columnsPerRow = 3; // Adjust as needed
+    this.groupedCards = this.cards.reduce((rows, card, index) => {
+      const rowIndex = Math.floor(index / columnsPerRow);
+      if (!rows[rowIndex]) rows[rowIndex] = [];
+      rows[rowIndex].push(card);
+      return rows;
+    }, [] as Card[][]);
+  }
 
   ngAfterViewInit() {
+    this.applyStarRatings();
+  }
+
+  applyStarRatings(): void {
     this.stars.forEach((starContainerRef) => {
       const cardIndex = parseInt(starContainerRef.nativeElement.getAttribute('data-card-index'), 10);
-      const card = this.cards[cardIndex]; // Get the corresponding card
+      const card = this.cards[cardIndex];
       const stars = starContainerRef.nativeElement.querySelectorAll('.star');
+
       if (card.rating > 0) {
-        // Add the "lit-up" class to the preselected stars
         for (let i = 0; i < card.rating; i++) {
           stars[i].classList.add('lit-up');
         }
       }
-  
-      // Add hover and click events
+
       stars.forEach((star: HTMLElement, starIndex: number) => {
         star.addEventListener('mouseenter', () => {
           for (let i = 0; i <= starIndex; i++) {
             stars[i].classList.add('lit-up');
           }
         });
-  
+
         star.addEventListener('mouseleave', () => {
           for (let i = 0; i < stars.length; i++) {
             stars[i].classList.remove('lit-up');
           }
-  
-          // Reapply the rating after hover ends
           for (let i = 0; i < card.rating; i++) {
             stars[i].classList.add('lit-up');
           }
@@ -91,18 +90,13 @@ export class AdventCalendarComponent implements AfterViewInit {
       });
     });
   }
-  
+
   selectStars(globalCardIndex: number, selectedStars: number): void {
-    console.log(`Global Card Index: ${globalCardIndex}, Selected Stars: ${selectedStars}`);
-    
-    // Update the card's rating
     this.cards[globalCardIndex].rating = selectedStars;
-  
-    // Clear and reapply the "lit-up" class based on the new rating
     const cardStars = this.stars.find(
       (ref) => parseInt(ref.nativeElement.getAttribute('data-card-index'), 10) === globalCardIndex
     );
-    
+
     if (cardStars) {
       const starElements = cardStars.nativeElement.querySelectorAll('.star');
       starElements.forEach((star: HTMLElement, index: number) => {
@@ -115,18 +109,10 @@ export class AdventCalendarComponent implements AfterViewInit {
     }
   }
 
-  // Group cards into rows (e.g., one row per month)
-  groupedCards: { image: string }[][] = this.cards.reduce((rows, card, index) => {
-    const rowIndex = Math.floor(index / 3); // Adjust 3 to the number of columns per row
-    if (!rows[rowIndex]) rows[rowIndex] = [];
-    rows[rowIndex].push(card);
-    return rows;
-  }, [] as { image: string }[][]); // Explicitly type as an array of arrays of card objects
-
-  // Unwrap a gift card
   unwrapGift(rowIndex: number, cardIndex: number): void {
-    console.log(`Unwrapping gift at row ${rowIndex}, card ${cardIndex}`);
-    const giftWrap = document.querySelectorAll('.gift-wrap')[rowIndex * 3 + cardIndex] as HTMLElement;
+    console.log('Unwrapping gift at row ${rowIndex}, card ${cardIndex}');
+    const cardIndexInDOM = rowIndex * this.groupedCards[0].length + cardIndex; // Adjust based on grouping
+    const giftWrap = document.querySelectorAll('.gift-wrap')[cardIndexInDOM] as HTMLElement;
     if (giftWrap) {
       giftWrap.classList.add('animate');
       setTimeout(() => {
