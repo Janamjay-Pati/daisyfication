@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { OnInit, AfterViewInit, Component, ElementRef, QueryList, ViewChildren } from '@angular/core';
-import { collection, getDocs, query, updateDoc, where } from 'firebase/firestore';
+import { addDoc, collection, getDocs, query, updateDoc, where } from 'firebase/firestore';
 import { db } from '../../services/firebase.service';
 
 interface Card {
+  index: number,
   name: string;
   image: string;
   rating: number;
@@ -18,6 +19,7 @@ interface Card {
   styleUrls: ['./advent-calendar.component.scss']
 })
 export class AdventCalendarComponent implements OnInit, AfterViewInit {
+  countdown: any;
   cards: Card[] = [];
   groupedCards: Card[][] = [];
   months = [
@@ -37,6 +39,7 @@ export class AdventCalendarComponent implements OnInit, AfterViewInit {
     this.cards = querySnapshot.docs.map((doc) => {
       const data = doc.data();
       return { 
+        index: data['index'],
         name: data['name'], 
         image: data['image'], 
         rating: data['rating'] || 0,
@@ -44,8 +47,83 @@ export class AdventCalendarComponent implements OnInit, AfterViewInit {
       };
     });
 
+    this.cards.sort((a,b) => a.index - b.index);
+
+    // Check the current time and set visible cards accordingly
+    this.checkTimeAndUpdateVisibleCards();
+
+    if (!this.cards?.length) {
+      this.startCountdown();
+    }
+
     this.groupCards(); // Group cards after fetching
-    console.log(this.cards);
+  }
+
+  startCountdown() {
+    const targetDate = new Date('January 1, 2025 00:00:00').getTime();
+
+    setInterval(() => {
+      const now = new Date().getTime();
+      const timeDifference = targetDate - now;
+
+      // If the target date has passed, stop the countdown
+      if (timeDifference <= 0) {
+        this.countdown = { days: 0, hours: 0, minutes: 0, seconds: 0 };
+        return;
+      }
+
+      this.countdown = {
+        days: Math.floor(timeDifference / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+        minutes: Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60)),
+        seconds: Math.floor((timeDifference % (1000 * 60)) / 1000)
+      };
+    }, 1000);
+  }
+
+  checkTimeAndUpdateVisibleCards() {
+    const allCards = this.cards;
+    const currentTime = new Date();
+    const januaryCutoffTime = new Date(currentTime.getFullYear(), 0, 1, 0, 0, 0, 0);  // January 1st, 12:00 AM
+    const februaryCutoffTime = new Date(currentTime.getFullYear(), 1, 1, 0, 0, 0, 0); // February 1st, 12:00 AM
+    const marchCutoffTime = new Date(currentTime.getFullYear(), 2, 1, 0, 0, 0, 0);    // March 1st, 12:00 AM
+    const aprilCutoffTime = new Date(currentTime.getFullYear(), 3, 1, 0, 0, 0, 0);    // April 1st, 12:00 AM
+    const mayCutoffTime = new Date(currentTime.getFullYear(), 4, 1, 0, 0, 0, 0);      // May 1st, 12:00 AM
+    const juneCutoffTime = new Date(currentTime.getFullYear(), 5, 1, 0, 0, 0, 0);     // June 1st, 12:00 AM
+    const julyCutoffTime = new Date(currentTime.getFullYear(), 6, 1, 0, 0, 0, 0);     // July 1st, 12:00 AM
+    const augustCutoffTime = new Date(currentTime.getFullYear(), 7, 1, 0, 0, 0, 0);   // August 1st, 12:00 AM
+    const septemberCutoffTime = new Date(currentTime.getFullYear(), 8, 1, 0, 0, 0, 0); // September 1st, 12:00 AM
+    const octoberCutoffTime = new Date(currentTime.getFullYear(), 9, 1, 0, 0, 0, 0);   // October 1st, 12:00 AM
+    const novemberCutoffTime = new Date(currentTime.getFullYear(), 10, 1, 0, 0, 0, 0); // November 1st, 12:00 AM
+    const decemberCutoffTime = new Date(currentTime.getFullYear(), 11, 1, 0, 0, 0, 0); // December 1st, 12:00 AM
+
+    if (currentTime < januaryCutoffTime) {
+      this.cards = [];
+    } else if (currentTime >= januaryCutoffTime && currentTime < februaryCutoffTime) {
+      this.cards = this.cards.slice(0, 3);
+    } else if (currentTime >= februaryCutoffTime && currentTime < marchCutoffTime) {
+      this.cards = this.cards.slice(0, 6);
+    } else if (currentTime >= marchCutoffTime && currentTime < aprilCutoffTime) {
+      this.cards = this.cards.slice(0, 9);
+    }  else if (currentTime >=  aprilCutoffTime&& currentTime < mayCutoffTime) {
+      this.cards = this.cards.slice(0, 12);
+    }  else if (currentTime >= mayCutoffTime && currentTime < juneCutoffTime) {
+      this.cards = this.cards.slice(0, 15);
+    }  else if (currentTime >= juneCutoffTime && currentTime < julyCutoffTime) {
+      this.cards = this.cards.slice(0, 18);
+    }  else if (currentTime >= julyCutoffTime && currentTime < augustCutoffTime) {
+      this.cards = this.cards.slice(0, 21);
+    }  else if (currentTime >= augustCutoffTime && currentTime < septemberCutoffTime) {
+      this.cards = this.cards.slice(0, 24);
+    }  else if (currentTime >= septemberCutoffTime && currentTime < octoberCutoffTime) {
+      this.cards = this.cards.slice(0, 27);
+    }  else if (currentTime >= octoberCutoffTime && currentTime < novemberCutoffTime) {
+      this.cards = this.cards.slice(0, 30);
+    }  else if (currentTime >= novemberCutoffTime &&  currentTime < decemberCutoffTime) {
+      this.cards = this.cards.slice(0, 33);
+    } else if (currentTime >= decemberCutoffTime) {
+      this.cards = allCards;
+    }
   }
 
   groupCards(): void {

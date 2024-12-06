@@ -5,6 +5,14 @@
   gap: 20px; /* Space between rows */
 }
 
+.placeholder-text {
+  font-size: 28px;
+  position: absolute;  /* Position this div absolutely inside the wrapper */
+  top: 50%;            /* Move it halfway down from the top */
+  left: 50%;           /* Move it halfway across from the left */
+  transform: translate(-50%, -50%);
+}
+
 .row-container {
   display: flex;
   flex-direction: column; /* Stack topic and cards vertically */

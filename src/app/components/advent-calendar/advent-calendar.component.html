@@ -1,4 +1,4 @@
-<div class="grid-container">
+<div *ngIf="cards?.length; else placeholderText" class="grid-container">
   <div *ngFor="let row of groupedCards; let rowIndex = index" class="row-container">
     <!-- Month name -->
     <div class="topic">{{ months[rowIndex] }}</div>
@@ -34,3 +34,7 @@
     </div>
   </div>
 </div>
+
+<ng-template #placeholderText>
+  <div class="placeholder-text">Advent Calendar would be coming up in {{ countdown.days }}d {{ countdown.hours }}h {{ countdown.minutes }}m {{ countdown.seconds }}s</div>
+</ng-template>
