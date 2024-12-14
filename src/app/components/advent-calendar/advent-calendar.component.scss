@@ -145,8 +145,8 @@
 }
 
 .star {
-  width: 40px;
-  height: 40px;
+  width: 35px;
+  height: 35px;
   background: url('/assets/star.png') no-repeat center/contain;
   background-size: contain;
   transition: background-image 0.3s ease-in-out, filter 0.3s ease-in-out;
@@ -155,5 +155,27 @@
 
 .star.lit-up {
   background-image: url('/assets/lit-up-star.png'); /* Glowing star image */
+  filter: brightness(1.5); /* Add brightness for glowing effect */
+}
+
+.spice-level {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  margin-top: 10px; /* Space between the image and the spice level */
+}
+
+.spice {
+  width: 35px;
+  height: 35px;
+  background: url('/assets/spice.png') no-repeat center/contain;
+  background-size: contain;
+  transition: background-image 0.3s ease-in-out, filter 0.3s ease-in-out;
+  cursor: pointer;
+}
+
+.spice.lit-up {
+  background-image: url('/assets/lit-up-spice.png'); /* Glowing spice level image */
   filter: brightness(1.5); /* Add brightness for glowing effect */
 }

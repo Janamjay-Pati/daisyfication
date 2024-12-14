@@ -30,6 +30,16 @@
             (click)="selectStars(rowIndex, cardIndex, starIndex + 1)">
           </div>
         </div>
+
+        <!-- Spice rating below the card -->
+        <div *ngIf="!card?.isWrapped" class="spice-level" [attr.data-card-index]="rowIndex * 3 + cardIndex">
+          <div 
+            class="spice" 
+            *ngFor="let spice of [1, 2, 3, 4, 5]; let spiceIndex = index"
+            [class.lit-up]="spiceIndex < card.spice"
+            (click)="selectSpiceLevel(rowIndex, cardIndex, spiceIndex + 1)">
+          </div>
+        </div>
       </div>
     </div>
   </div>

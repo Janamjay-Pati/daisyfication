@@ -9,6 +9,7 @@ interface Card {
   image: string;
   rating: number;
   isWrapped: boolean;
+  spice: number;
 }
 
 @Component({
@@ -43,7 +44,8 @@ export class AdventCalendarComponent implements OnInit, AfterViewInit {
         name: data['name'], 
         image: data['image'], 
         rating: data['rating'] || 0,
-        isWrapped: data['isWrapped']
+        isWrapped: data['isWrapped'],
+        spice: data['spice']
       };
     });
 
@@ -228,7 +230,55 @@ export class AdventCalendarComponent implements OnInit, AfterViewInit {
             }
         });
     }
-}
+  }
+
+  selectSpiceLevel(rowIndex: number, cardIndex: number, selectedSpiceLevel: number): void {
+    const globalCardIndex = rowIndex * 3 + cardIndex;
+    const cardName = this.cards[globalCardIndex].name;
+  
+    // Update the spice level in the local array
+    this.cards[globalCardIndex].spice = selectedSpiceLevel;
+  
+    // Query the Firestore collection to find the document with this unique name
+    const cardQuery = query(collection(db, 'AdventCalendarCards'), where('name', '==', cardName));
+  
+    getDocs(cardQuery).then(querySnapshot => {
+      if (!querySnapshot.empty) {
+        const cardDocRef = querySnapshot.docs[0].ref;
+  
+        // Update the spice level in Firestore
+        updateDoc(cardDocRef, { spice: selectedSpiceLevel })
+          .then(() => {
+            console.log('Spice Level updated in Firestore!');
+          })
+          .catch((error) => {
+            console.error('Error updating spice level: ', error);
+          });
+      } else {
+        console.error('Card not found with name: ', cardName);
+      }
+    })
+    .catch((error) => {
+      console.error('Error querying Firestore: ', error);
+    });
+  
+    // Find the spice container for this specific card
+    const cardSpices = this.stars.find(
+      (ref) => parseInt(ref.nativeElement.getAttribute('data-card-index'), 10) === globalCardIndex
+    );
+  
+    if (cardSpices) {
+      // Update the spice visuals
+      const spiceElements = cardSpices.nativeElement.querySelectorAll('.spice');
+      spiceElements.forEach((spice: HTMLElement, index: number) => {
+        if (index < selectedSpiceLevel) {
+          spice.classList.add('lit-up');
+        } else {
+          spice.classList.remove('lit-up');
+        }
+      });
+    }
+  }
 
   unwrapGift(rowIndex: number, cardIndex: number): void {
     console.log(`Unwrapping gift at row ${rowIndex}, card ${cardIndex}`);
