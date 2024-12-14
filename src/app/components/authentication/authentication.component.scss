@@ -1,0 +1,97 @@
+.authentication {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Full viewport height */
+  .auth-container {
+    width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  
+    h2 {
+      text-align: center;
+      font-size: 24px;
+      color: #ffffff;
+      margin-bottom: 20px;
+    }
+  
+    .error {
+      color: #e74c3c;
+      background-color: #fce4e4;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #e74c3c;
+      border-radius: 4px;
+      font-size: 14px;
+      text-align: center;
+    }
+  
+    .auth-form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+  
+      .form-group {
+        display: flex;
+        flex-direction: column;
+  
+        label {
+          font-size: 14px;
+          color: #ffffff;
+          margin-bottom: 5px;
+        }
+  
+        input {
+          padding: 10px;
+          font-size: 14px;
+          border: 1px solid #cccccc;
+          border-radius: 4px;
+          outline: none;
+  
+          &:focus {
+            border-color: #268ca2;
+            box-shadow: 0 0 4px rgba(52, 152, 219, 0.5);
+          }
+        }
+      }
+  
+      .button-group {
+        display: flex;
+        justify-content: space-between;
+        // margin-top: 0.5rem;
+  
+        .btn {
+          flex: 1;
+          padding: 10px 15px;
+          font-size: 14px;
+          font-weight: bold;
+          border-radius: 4px;
+          cursor: pointer;
+          border: none;
+          text-align: center;
+  
+          &.primary {
+            background-color: #268ca2;
+            color: #ffffff;
+  
+            &:hover {
+              background-color: #268397;
+            }
+          }
+  
+          &.secondary {
+            background-color: #95a5a6;
+            color: #ffffff;
+            margin-left: 10px;
+  
+            &:hover {
+              background-color: #7f8c8d;
+            }
+          }
+        }
+      }
+    }
+  }
+}
