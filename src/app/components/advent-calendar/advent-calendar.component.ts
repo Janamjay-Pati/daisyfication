@@ -21,6 +21,7 @@ interface Card {
 })
 export class AdventCalendarComponent implements OnInit, AfterViewInit {
   countdown: any;
+  isLoading = false;
   cards: Card[] = [];
   groupedCards: Card[][] = [];
   months = [
@@ -32,6 +33,7 @@ export class AdventCalendarComponent implements OnInit, AfterViewInit {
   stars!: QueryList<ElementRef>; 
 
   ngOnInit(): void {
+    this.isLoading = true;
     this.getData();
   }
 
@@ -51,14 +53,12 @@ export class AdventCalendarComponent implements OnInit, AfterViewInit {
 
     this.cards.sort((a,b) => a.index - b.index);
 
-    // Check the current time and set visible cards accordingly
-    this.checkTimeAndUpdateVisibleCards();
-
     if (!this.cards?.length) {
       this.startCountdown();
+    } else {
+      this.checkTimeAndUpdateVisibleCards();
+      this.groupCards();
     }
-
-    this.groupCards(); // Group cards after fetching
   }
 
   startCountdown() {
@@ -80,6 +80,8 @@ export class AdventCalendarComponent implements OnInit, AfterViewInit {
         minutes: Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60)),
         seconds: Math.floor((timeDifference % (1000 * 60)) / 1000)
       };
+
+      this.isLoading = false;
     }, 1000);
   }
 
@@ -136,6 +138,7 @@ export class AdventCalendarComponent implements OnInit, AfterViewInit {
       rows[rowIndex].push(card);
       return rows;
     }, [] as Card[][]);
+    this.isLoading = false;
   }
 
   ngAfterViewInit() {
