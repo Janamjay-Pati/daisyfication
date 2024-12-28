@@ -21,7 +21,10 @@
     "lib": [
       "ES2022",
       "dom"
-    ]
+    ],
+    "paths": {
+      "./../../../../node_modules/three/examples/jsm/loaders/GLTFLoader": ["./../../../../node_modules/three/examples/jsm/loaders/GLTFLoader"]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

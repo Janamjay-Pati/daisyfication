@@ -6,22 +6,24 @@ import { MyBookWorldComponent } from './components/my-book-world/my-book-world.c
 import { AdventCalendarComponent } from './components/advent-calendar/advent-calendar.component';
 import { AuthenticationComponent } from './components/authentication/authentication.component'; // Import your Auth component
 import { authGuard } from './guards/auth.guard'; // Import the authGuard
+import { MilestoneLadderComponent } from './components/milestone-ladder/milestone-ladder.component';
 
 export const routes: Routes = [
   { path: 'auth', component: AuthenticationComponent }, // Add the auth route
   {
     path: '',
     component: DashboardComponent,
-    canActivate: [authGuard], // Protect the dashboard with authGuard
+    // canActivate: [authGuard], // Protect the dashboard with authGuard
   },
   {
     path: 'personal',
     component: PersonalComponent,
-    canActivate: [authGuard], // Protect the personal route with authGuard
+    // canActivate: [authGuard], // Protect the personal route with authGuard
     children: [
       { path: '', redirectTo: 'importantDates', pathMatch: 'full' },
       { path: 'importantDates', component: MyCalendarComponent },
       { path: 'myBookWorld', component: MyBookWorldComponent },
+      { path: 'milestoneLadder', component: MilestoneLadderComponent },
       { path: 'adventCalendar', component: AdventCalendarComponent },
     ],
   },
