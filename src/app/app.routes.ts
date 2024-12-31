@@ -13,12 +13,12 @@ export const routes: Routes = [
   {
     path: '',
     component: DashboardComponent,
-    // canActivate: [authGuard], // Protect the dashboard with authGuard
+    canActivate: [authGuard], // Protect the dashboard with authGuard
   },
   {
     path: 'personal',
     component: PersonalComponent,
-    // canActivate: [authGuard], // Protect the personal route with authGuard
+    canActivate: [authGuard], // Protect the personal route with authGuard
     children: [
       { path: '', redirectTo: 'importantDates', pathMatch: 'full' },
       { path: 'importantDates', component: MyCalendarComponent },
