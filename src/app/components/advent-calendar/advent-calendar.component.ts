@@ -53,12 +53,16 @@ export class AdventCalendarComponent implements OnInit, AfterViewInit {
 
     this.cards.sort((a,b) => a.index - b.index);
 
-    if (!this.cards?.length) {
+    if (!this.isAdventCalendarActive()) {
       this.startCountdown();
     } else {
       this.checkTimeAndUpdateVisibleCards();
       this.groupCards();
     }
+  }
+
+  isAdventCalendarActive() {
+    return new Date().getFullYear() === 2025;
   }
 
   startCountdown() {
@@ -88,18 +92,18 @@ export class AdventCalendarComponent implements OnInit, AfterViewInit {
   checkTimeAndUpdateVisibleCards() {
     const allCards = this.cards;
     const currentTime = new Date();
-    const januaryCutoffTime = new Date(currentTime.getFullYear(), 0, 1, 0, 0, 0, 0);  // January 1st, 12:00 AM
-    const februaryCutoffTime = new Date(currentTime.getFullYear(), 1, 1, 0, 0, 0, 0); // February 1st, 12:00 AM
-    const marchCutoffTime = new Date(currentTime.getFullYear(), 2, 1, 0, 0, 0, 0);    // March 1st, 12:00 AM
-    const aprilCutoffTime = new Date(currentTime.getFullYear(), 3, 1, 0, 0, 0, 0);    // April 1st, 12:00 AM
-    const mayCutoffTime = new Date(currentTime.getFullYear(), 4, 1, 0, 0, 0, 0);      // May 1st, 12:00 AM
-    const juneCutoffTime = new Date(currentTime.getFullYear(), 5, 1, 0, 0, 0, 0);     // June 1st, 12:00 AM
-    const julyCutoffTime = new Date(currentTime.getFullYear(), 6, 1, 0, 0, 0, 0);     // July 1st, 12:00 AM
-    const augustCutoffTime = new Date(currentTime.getFullYear(), 7, 1, 0, 0, 0, 0);   // August 1st, 12:00 AM
-    const septemberCutoffTime = new Date(currentTime.getFullYear(), 8, 1, 0, 0, 0, 0); // September 1st, 12:00 AM
-    const octoberCutoffTime = new Date(currentTime.getFullYear(), 9, 1, 0, 0, 0, 0);   // October 1st, 12:00 AM
-    const novemberCutoffTime = new Date(currentTime.getFullYear(), 10, 1, 0, 0, 0, 0); // November 1st, 12:00 AM
-    const decemberCutoffTime = new Date(currentTime.getFullYear(), 11, 1, 0, 0, 0, 0); // December 1st, 12:00 AM
+    const januaryCutoffTime = new Date(2025, 0, 1, 0, 0, 0, 0);  // January 1st, 12:00 AM
+    const februaryCutoffTime = new Date(2025, 1, 1, 0, 0, 0, 0); // February 1st, 12:00 AM
+    const marchCutoffTime = new Date(2025, 2, 1, 0, 0, 0, 0);    // March 1st, 12:00 AM
+    const aprilCutoffTime = new Date(2025, 3, 1, 0, 0, 0, 0);    // April 1st, 12:00 AM
+    const mayCutoffTime = new Date(2025, 4, 1, 0, 0, 0, 0);      // May 1st, 12:00 AM
+    const juneCutoffTime = new Date(2025, 5, 1, 0, 0, 0, 0);     // June 1st, 12:00 AM
+    const julyCutoffTime = new Date(2025, 6, 1, 0, 0, 0, 0);     // July 1st, 12:00 AM
+    const augustCutoffTime = new Date(2025, 7, 1, 0, 0, 0, 0);   // August 1st, 12:00 AM
+    const septemberCutoffTime = new Date(2025, 8, 1, 0, 0, 0, 0); // September 1st, 12:00 AM
+    const octoberCutoffTime = new Date(2025, 9, 1, 0, 0, 0, 0);   // October 1st, 12:00 AM
+    const novemberCutoffTime = new Date(2025, 10, 1, 0, 0, 0, 0); // November 1st, 12:00 AM
+    const decemberCutoffTime = new Date(2025, 11, 1, 0, 0, 0, 0); // December 1st, 12:00 AM
 
     if (currentTime < januaryCutoffTime) {
       this.cards = [];
