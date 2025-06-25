@@ -1,12 +1,20 @@
-<div class="container">
-    <div class="image-wrapper" (click)="triggerAnimation()">
-      <div class="image" [ngClass]="{'active': isActive}"></div>
-      <div class="splash-container" *ngIf="isActive">
-        <div *ngFor="let splash of splashes" class="splash" 
-             [ngStyle]="{'top': splash.top, 'left': splash.left, 'background-color': splash.color, 'transform': splash.transform}"
-             (click)="onSplashClick(splash)">
-             <div class="centered-text">{{ splash.title }}</div>
-        </div>
-      </div>
-    </div>
+<div class="image-wrapper">
+  <div class="image"></div>
+  <div class="heart">
+    <span class="heart-text">Ms. Nia Right</span>
   </div>
+</div>
+<img src="https://media.tenor.com/v1Y9L0tJMy8AAAAi/attention-black-cat.gif" alt="Waving Cat" style="width:100px; position: fixed; bottom: 10px; right: 10px;">
+<mat-tab-group>
+  <mat-tab label="Important Dates">
+    <div class="tab">
+      <app-my-calendar></app-my-calendar>
+    </div>
+  </mat-tab>
+  <mat-tab label="Advent Calendar">
+    <div class="tab">
+      <app-advent-calendar></app-advent-calendar>
+    </div>
+  </mat-tab>
+</mat-tab-group>  
+

@@ -2,7 +2,11 @@ import { CommonModule } from '@angular/common';
 import { OnInit, AfterViewInit, Component, ElementRef, QueryList, ViewChildren } from '@angular/core';
 import { addDoc, collection, getDocs, query, updateDoc, where } from 'firebase/firestore';
 import { db } from '../../services/firebase.service';
-
+import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatButtonModule} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
+import {FormControl, FormGroup, ReactiveFormsModule} from '@angular/forms';
 interface Card {
   index: number,
   name: string;
@@ -15,7 +19,7 @@ interface Card {
 @Component({
   selector: 'app-advent-calendar',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatInputModule, MatFormFieldModule, MatFormFieldModule, ReactiveFormsModule, MatButtonModule, MatIconModule],
   templateUrl: './advent-calendar.component.html',
   styleUrls: ['./advent-calendar.component.scss']
 })
@@ -28,9 +32,17 @@ export class AdventCalendarComponent implements OnInit, AfterViewInit {
     'January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December'
   ];
+  readSomethingElseForm: FormGroup;
 
   @ViewChildren('stars', { read: ElementRef })
   stars!: QueryList<ElementRef>; 
+
+  constructor() {
+    this.readSomethingElseForm = new FormGroup({
+      bookName: new FormControl(''),
+      cardNumber: new FormControl(0),
+    })
+  }
 
   ngOnInit(): void {
     this.isLoading = true;
@@ -325,5 +337,9 @@ export class AdventCalendarComponent implements OnInit, AfterViewInit {
         console.error('Error querying Firestore: ', error);
       });
     }
+  }
+
+  addBook(cardNumber: number) {
+    const bookName = this.readSomethingElseForm.controls['bookName'].value;
   }
 }

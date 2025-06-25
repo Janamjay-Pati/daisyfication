@@ -21,25 +21,37 @@
           </div>
         </div>
 
-        <!-- Stars below the card -->
-        <div *ngIf="!card?.isWrapped" class="stars" [attr.data-card-index]="rowIndex * 3 + cardIndex">
-          <div 
-            class="star" 
-            *ngFor="let star of [1, 2, 3, 4, 5]; let starIndex = index"
-            [class.lit-up]="starIndex < card.rating"
-            (click)="selectStars(rowIndex, cardIndex, starIndex + 1)">
+        @if(cardIndex !== 2) {
+          <!-- Stars below the card -->
+          <div *ngIf="!card?.isWrapped" class="stars" [attr.data-card-index]="rowIndex * 3 + cardIndex">
+            <div 
+              class="star" 
+              *ngFor="let star of [1, 2, 3, 4, 5]; let starIndex = index"
+              [class.lit-up]="starIndex < card.rating"
+              (click)="selectStars(rowIndex, cardIndex, starIndex + 1)">
+            </div>
           </div>
-        </div>
 
-        <!-- Spice rating below the card -->
-        <div *ngIf="!card?.isWrapped" class="spice-level" [attr.data-card-index]="rowIndex * 3 + cardIndex">
-          <div 
-            class="spice" 
-            *ngFor="let spice of [1, 2, 3, 4, 5]; let spiceIndex = index"
-            [class.lit-up]="spiceIndex < card.spice"
-            (click)="selectSpiceLevel(rowIndex, cardIndex, spiceIndex + 1)">
+          <!-- Spice rating below the card -->
+          <div *ngIf="!card?.isWrapped" class="spice-level" [attr.data-card-index]="rowIndex * 3 + cardIndex">
+            <div 
+              class="spice" 
+              *ngFor="let spice of [1, 2, 3, 4, 5]; let spiceIndex = index"
+              [class.lit-up]="spiceIndex < card.spice"
+              (click)="selectSpiceLevel(rowIndex, cardIndex, spiceIndex + 1)">
+            </div>
           </div>
-        </div>
+        } @else {
+          <form class="form"  *ngIf="!card?.isWrapped" [formGroup]="readSomethingElseForm">
+            <mat-form-field class="name">
+              <mat-label>Book Name:</mat-label>
+              <input matInput type="text" formControlName="bookName" />
+            </mat-form-field>
+            <button mat-icon-button (click)="addBook((rowIndex + 1) * 3)">
+              <mat-icon>add</mat-icon>
+            </button>
+          </form>
+        }
       </div>
     </div>
   </div>

@@ -1,13 +1,35 @@
 /* You can add global styles to this file, and also import other style files */
-body {
-    background: linear-gradient(
-      to bottom,
-      #000000, /* Starting color (hex code) */
-      #1e95b0  /* Ending color (hex code) */
-  );
-  color: white;
-  width: 100vw; /* Full viewport width */
-  height: 100vh; /* Full viewport height */
-  background-size: cover;
-  background-attachment: fixed;
+@use '@angular/material' as mat;
+
+$primary: mat.define-palette(mat.$pink-palette);
+$accent: mat.define-palette(mat.$grey-palette);
+$warn: mat.define-palette(mat.$red-palette);
+
+$white-theme: mat.define-light-theme((
+  color: (
+    primary: $primary,
+    accent: $accent,
+    warn: $warn
+  ),
+  typography: mat.define-typography-config(),
+  density: 0
+));
+
+@include mat.core();
+@include mat.all-component-themes($white-theme);
+
+/* styles.scss or global styles */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: linear-gradient(to bottom, #00416A, #E4E5E6);
+  overflow: hidden; /* prevents unwanted scroll */
+}
+
+app-root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: auto; /* enables scroll only inside the app if needed */
 }

@@ -202,6 +202,15 @@
   animation: spin 1.5s linear infinite;
 }
 
+.form {
+  margin-top: 1.5rem;
+}
+
+.name {
+  width: 80%;
+  margin-right: 0.25rem;
+}
+
 @keyframes spin {
   0% {
     transform: rotate(0deg);
