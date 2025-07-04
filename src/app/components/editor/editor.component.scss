@@ -1,0 +1,79 @@
+.editor {
+    background: white;
+    width: 100%;
+}
+
+#custom-toolbar {
+    background: white;
+    border-bottom: 1px solid #ddd;
+    padding: 10px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  
+    .ql-formats {
+      margin-right: 10px;
+    }
+  
+    button, select {
+      border: none;
+      background: transparent;
+      cursor: pointer;
+    }
+  }
+
+.editor-container {
+  padding: 2rem;
+  transition: all 0.3s ease;
+}
+
+.focus-toggle {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 1000;
+  padding: 0.5rem 1rem;
+}
+
+.focus-mode {
+  background: #fff;
+  overflow: hidden;
+  padding: 0;
+  height: 100vh
+}
+
+.word-count {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.9rem;
+  color: #666;
+}
+
+:host ::ng-deep .ql-container {
+  background: #fff;
+  height: calc(100vh - 6.9rem);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+  border: none;
+  padding: 2rem;
+}
+
+:host ::ng-deep .focus-mode .ql-container {
+  height: 100vh !important;
+}
+
+:host ::ng-deep .focus-mode .ql-toolbar {
+  height: 100vh !important;
+}
+
+:host ::ng-deep .ql-editor {
+  height: 100%;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  outline: none;
+}
+
+:host ::ng-deep .focus-mode .ql-toolbar {
+  display: none !important;
+}

@@ -23,6 +23,8 @@
     "@emailjs/browser": "^4.4.1",
     "@tweenjs/tween.js": "^25.0.0",
     "firebase": "^11.0.2",
+    "ngx-quill": "^26.0.10",
+    "quill": "^2.0.3",
     "rxjs": "~7.8.0",
     "three": "^0.171.0",
     "tslib": "^2.3.0",

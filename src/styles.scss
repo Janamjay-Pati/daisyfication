@@ -33,3 +33,7 @@ app-root {
   height: 100%;
   overflow: auto; /* enables scroll only inside the app if needed */
 }
+
+html, body, .notranslate {
+  translate: no;
+}

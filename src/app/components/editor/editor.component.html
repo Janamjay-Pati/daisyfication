@@ -1,1 +1,50 @@
-<p>editor works!</p>
+<div id="custom-toolbar" [ngStyle]="focusMode ? { 'display': 'none' } : {}">
+    <span class="ql-formats">
+        <button class="ql-bold"></button>
+        <button class="ql-italic"></button>
+        <button class="ql-underline"></button>
+    </span>
+
+    <span class="ql-formats">
+        <select class="ql-header">
+        <option selected></option>
+        <option value="1"></option>
+        <option value="2"></option>
+        </select>
+        <button class="ql-blockquote"></button>
+    </span>
+
+    <span class="ql-formats">
+        <button class="ql-list" value="ordered"></button>
+        <button class="ql-list" value="bullet"></button>
+    </span>
+
+    <span class="ql-formats">
+        <button class="ql-link"></button>
+        <button class="ql-image"></button>
+        <button class="ql-code-block"></button>
+    </span>
+
+    <span class="ql-formats">
+        <button class="ql-clean"></button>
+    </span>
+
+
+    <span class="ql-formats">
+        <button (click)="toggleFocusMode()">
+            {{ focusMode ? '@' : '!' }}
+        </button>
+    </span>
+</div>
+  
+<div [class.focus-mode]="focusMode" class="editor-container">
+<quill-editor
+    class="editor"
+    [(ngModel)]="content"
+    [modules]="modules">
+</quill-editor>
+</div>
+  
+<div class="word-count">
+{{ wordCount }} words • {{ charCount }} characters
+</div>
