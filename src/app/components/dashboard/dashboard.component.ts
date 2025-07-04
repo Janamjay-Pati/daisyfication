@@ -16,4 +16,8 @@ import { MatButtonModule } from '@angular/material/button';
 export class DashboardComponent {
   constructor(private router: Router) {}
 
+  openEditor() {
+    this.router.navigate(['/editor'])
+  }
+
 }
