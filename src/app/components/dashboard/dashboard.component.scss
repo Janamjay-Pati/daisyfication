@@ -31,18 +31,29 @@
     13% 14%, 38% 9%
   );
   margin: 180px 0 0 200px;
+  
+  .heart-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white; /* Text color */
+    font-size: 1.5em; /* Text size */
+    text-align: center; /* Center text horizontally */
+    padding: 10px; /* Add some padding if needed */
+  }
 }
 
-.heart-text {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: white; /* Text color */
-  font-size: 1.5em; /* Text size */
-  text-align: center; /* Center text horizontally */
-  padding: 10px; /* Add some padding if needed */
+
+.button-container {
+  .heart1-text {
+    position: absolute;
+    width: 200px;
+    top: 0;
+    margin-left: 420px;
+  }
 }
+
 
 .tab {
   padding: 50px 100px;

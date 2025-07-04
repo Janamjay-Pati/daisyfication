@@ -20,6 +20,7 @@
     "@angular/platform-browser": "^18.1.0",
     "@angular/platform-browser-dynamic": "^18.1.0",
     "@angular/router": "^18.1.0",
+    "@emailjs/browser": "^4.4.1",
     "@tweenjs/tween.js": "^25.0.0",
     "firebase": "^11.0.2",
     "rxjs": "~7.8.0",

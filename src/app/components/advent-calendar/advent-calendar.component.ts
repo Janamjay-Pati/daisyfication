@@ -7,6 +7,8 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {FormControl, FormGroup, ReactiveFormsModule} from '@angular/forms';
+import emailjs from '@emailjs/browser';
+
 interface Card {
   index: number,
   name: string;
@@ -340,6 +342,23 @@ export class AdventCalendarComponent implements OnInit, AfterViewInit {
   }
 
   addBook(cardNumber: number) {
-    const bookName = this.readSomethingElseForm.controls['bookName'].value;
+    const bookName = this.readSomethingElseForm.controls['bookName'].value.replace(/\b\w/g, (c: any) => c.toUpperCase());;
+    const month = this.months[(cardNumber / 3) - 1];
+    // this.sendEmail(bookName, month);
+    this.readSomethingElseForm.reset();
+  }
+
+  sendEmail(name: any, month: any) {
+    const templateParams = {
+      bookName: name,
+      monthName: month
+    };
+  
+    emailjs.send('service_v3vkc6x', 'template_phxsajm', templateParams, 'ak6L1nI7LqakmIWlC')
+      .then((response: any) => {
+        console.log('✅ Email sent!', response.status, response.text);
+      }, (error: Error) => {
+        console.error('❌ Failed to send email', error);
+      });
   }
 }

@@ -8,7 +8,7 @@ export const routes: Routes = [
   {
     path: '',
     component: DashboardComponent,
-    // canActivate: [authGuard], // Protect the dashboard with authGuard
+    canActivate: [authGuard], // Protect the dashboard with authGuard
   },
   { path: '**', redirectTo: 'auth' }, // Redirect all unknown paths to auth
 ];
