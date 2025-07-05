@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { QuillEditorComponent } from 'ngx-quill';
 import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-editor',
   standalone: true,
-  imports: [CommonModule, FormsModule, QuillEditorComponent],
+  imports: [CommonModule, MatIconModule, FormsModule, QuillEditorComponent],
   templateUrl: './editor.component.html',
   styleUrl: './editor.component.scss'
 })
