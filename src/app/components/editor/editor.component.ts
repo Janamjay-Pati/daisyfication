@@ -13,6 +13,7 @@ import { MatIconModule } from '@angular/material/icon';
 })
 export class EditorComponent implements OnInit {
   content = '';
+  toolbarHidden = false;
   modules = {
     toolbar: {
       container: '#custom-toolbar'
@@ -24,6 +25,7 @@ export class EditorComponent implements OnInit {
 
   toggleFocusMode() {
     this.focusMode = !this.focusMode;
+    this.toolbarHidden = this.focusMode;
   
     const el = document.documentElement;
   
@@ -36,6 +38,10 @@ export class EditorComponent implements OnInit {
       else if ((document as any).webkitExitFullscreen) (document as any).webkitExitFullscreen();
       else if ((document as any).msExitFullscreen) (document as any).msExitFullscreen();
     }
+  }
+
+  openOptions() {
+    this.toolbarHidden = !this.toolbarHidden;
   }
 
   ngOnInit() {

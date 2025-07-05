@@ -10,8 +10,22 @@
     position: sticky;
     top: 0;
     z-index: 10;
-    display: flex;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    width: 100%;
+    
+    .go-back {
+      justify-self: start;
+    }
+
+    .options {
+      justify-self: center;
+    }
+
+    .open-options {
+      justify-self: end;
+    }
   
     .ql-formats {
       margin-right: 10px;
@@ -23,11 +37,6 @@
       cursor: pointer;
     }
   }
-
-.editor-container {
-  padding: 2rem;
-  transition: all 0.3s ease;
-}
 
 :host ::ng-deep .ql-toolbar .no-padding {
   padding: 0;
@@ -45,7 +54,6 @@
   background: #fff;
   overflow: hidden;
   padding: 0;
-  height: 100vh
 }
 
 .word-count {
@@ -59,18 +67,10 @@
 
 :host ::ng-deep .ql-container {
   background: #fff;
-  height: calc(100vh - 6.9rem);
+  height: calc(100vh - 3rem);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
   border: none;
-  padding: 2rem;
-}
-
-:host ::ng-deep .focus-mode .ql-container {
-  height: 100vh !important;
-}
-
-:host ::ng-deep .focus-mode .ql-toolbar {
-  height: 100vh !important;
+  padding: 2rem 0;
 }
 
 :host ::ng-deep .ql-editor {

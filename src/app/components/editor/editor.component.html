@@ -1,38 +1,26 @@
-<div id="custom-toolbar" [ngStyle]="focusMode ? { 'display': 'none' } : {}">
-    <span class="ql-formats">
-        <button class="ql-bold"></button>
-        <button class="ql-italic"></button>
-        <button class="ql-underline"></button>
+<div id="custom-toolbar">
+    <span class="go-back">
+        <button class="no-padding" (click)="toggleFocusMode()" [ngStyle]="!focusMode ? {display: 'none'} : {}">
+            <mat-icon>keyboard_arrow_left</mat-icon>
+        </button>
     </span>
-
-    <span class="ql-formats">
-        <select class="ql-header">
-        <option selected></option>
-        <option value="1"></option>
-        <option value="2"></option>
-        </select>
-        <button class="ql-blockquote"></button>
-    </span>
-
-    <span class="ql-formats">
-        <button class="ql-list" value="ordered"></button>
-        <button class="ql-list" value="bullet"></button>
-    </span>
-
-    <span class="ql-formats">
-        <button class="ql-link"></button>
-        <button class="ql-image"></button>
-        <button class="ql-code-block"></button>
-    </span>
-
-    <span class="ql-formats">
-        <button class="ql-clean"></button>
-    </span>
-
-
-    <span class="ql-formats">
-        <button class="no-padding" (click)="toggleFocusMode()">
+    <span class="options" [ngStyle]="toolbarHidden ? {visibility: 'hidden'} : {}">
+        <button class="ql-formats ql-bold"></button>
+        <button class="ql-formats ql-italic"></button>
+        <button class="ql-formats ql-underline"></button>
+        <button class="ql-formats ql-blockquote"></button>
+        <button class="ql-formats ql-list" value="ordered"></button>
+        <button class="ql-formats ql-list" value="bullet"></button>
+        <button class="ql-formats ql-link"></button>
+        <button class="ql-formats ql-image"></button>
+        <button class="ql-formats ql-clean"></button>
+        <button class="ql-formats no-padding" (click)="toggleFocusMode()" [ngStyle]="focusMode ? {display: 'none'} : {}">
             <mat-icon>fullscreen</mat-icon>
+        </button>
+    </span>
+    <span class="open-options" [ngStyle]="!focusMode ? {visibility: 'hidden'} : {}">
+        <button class="no-padding" (click)="openOptions()">
+            <mat-icon>more_vert</mat-icon>
         </button>
     </span>
 </div>
