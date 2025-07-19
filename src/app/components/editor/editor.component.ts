@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { QuillEditorComponent } from 'ngx-quill';
 import { CommonModule } from '@angular/common';
@@ -13,6 +13,7 @@ import { MatIconModule } from '@angular/material/icon';
 })
 export class EditorComponent implements OnInit {
   content = '';
+  selectedColor = '#000000';
   toolbarHidden = false;
   modules = {
     toolbar: {
@@ -22,6 +23,7 @@ export class EditorComponent implements OnInit {
   focusMode = false;
   wordCount = 0;
   charCount = 0;
+  @ViewChild(QuillEditorComponent) quillEditorComponent!: QuillEditorComponent;
 
   toggleFocusMode() {
     this.focusMode = !this.focusMode;
@@ -63,6 +65,20 @@ export class EditorComponent implements OnInit {
     const div = document.createElement('div');
     div.innerHTML = html;
     return div.textContent || div.innerText || '';
+  }
+
+  applyColor(event: any) {
+    const color = event.target.value;
+    const quillEditor = this.quillEditorComponent?.quillEditor;
+    if (quillEditor) {
+      const range = quillEditor.getSelection();
+      if (range && range.length > 0) {
+        quillEditor.format('color', color);
+      } else {
+        // Set color for future input
+        quillEditor.format('color', color);
+      }
+    }
   }
 
 }
