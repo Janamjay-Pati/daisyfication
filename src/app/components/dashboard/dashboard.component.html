@@ -3,8 +3,32 @@
   <div class="heart">
     <span class="heart-text">Ms. Nia Right</span>
   </div>
-  <div class="button-container">
-    <span class="heart1-text"><button mat-flat-button color="primary" (click)="openEditor()">Open Editor</button></span>
+  <div class="books-dropdown">
+    <span class="heart1-text">
+      <mat-form-field appearance="fill" style="width: 200px; margin-bottom: 16px;">
+      <mat-label>Select Book</mat-label>
+      <mat-select [(value)]="selectedBookIndex" (selectionChange)="onBookSelect($event.value)">
+        <mat-option *ngFor="let book of books; let i = index" [value]="i">
+          {{ book.title }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    </span>
+  </div>
+  <div class="chapters-dropdown">
+    <span class="heart1-text">
+      <mat-form-field appearance="fill" style="width: 200px; margin-bottom: 16px;">
+      <mat-label>Select Chapter</mat-label>
+      <mat-select [(value)]="selectedChapterIndex" (selectionChange)="onChapterSelect($event.value)" [disabled]="selectedBookIndex === null">
+        <mat-option *ngFor="let chapter of selectedBookChapters; let i = index" [value]="i">
+          {{ chapter.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    </span>
+  </div>
+  <div class="open-editor-button">
+    <span class="open-editor"><button mat-flat-button color="primary" (click)="openEditor()" [disabled]="selectedChapterIndex === null">Open Editor</button></span>
   </div>
 </div>
 <img src="https://media.tenor.com/v1Y9L0tJMy8AAAAi/attention-black-cat.gif" alt="Waving Cat" style="width:100px; position: fixed; bottom: 10px; right: 10px;">
@@ -19,5 +43,4 @@
       <app-advent-calendar></app-advent-calendar>
     </div>
   </mat-tab>
-</mat-tab-group>  
-
+</mat-tab-group>
