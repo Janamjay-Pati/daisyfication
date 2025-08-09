@@ -7,7 +7,10 @@
     <span class="heart1-text">
       <mat-form-field appearance="fill" style="width: 200px; margin-bottom: 16px;">
       <mat-label>Select Book</mat-label>
-      <mat-select [(value)]="selectedBookIndex" (selectionChange)="onBookSelect($event.value)">
+      <mat-select (selectionChange)="onBookSelect($event.value)">
+        <mat-option [value]="-1">
+          <strong>Add New Book</strong>
+        </mat-option>
         <mat-option *ngFor="let book of books; let i = index" [value]="i">
           {{ book.title }}
         </mat-option>
@@ -20,6 +23,9 @@
       <mat-form-field appearance="fill" style="width: 200px; margin-bottom: 16px;">
       <mat-label>Select Chapter</mat-label>
       <mat-select [(value)]="selectedChapterIndex" (selectionChange)="onChapterSelect($event.value)" [disabled]="selectedBookIndex === null">
+        <mat-option [value]="-1">
+          <strong>Add New Chapter</strong>
+        </mat-option>
         <mat-option *ngFor="let chapter of selectedBookChapters; let i = index" [value]="i">
           {{ chapter.name }}
         </mat-option>

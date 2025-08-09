@@ -1,6 +1,6 @@
 <div id="custom-toolbar">
     <span class="go-back">
-        <button class="no-padding" (click)="toggleFocusMode()" [ngStyle]="!focusMode ? {display: 'none'} : {}">
+        <button class="no-padding" (click)="onBackArrowClick(focusMode)">
             <mat-icon>keyboard_arrow_left</mat-icon>
         </button>
     </span>
@@ -40,6 +40,12 @@
             <button class="ql-link"></button>
             <button class="ql-image"></button>
             <button class="ql-clean"></button>
+          </span>
+
+          <span class="ql-formats">
+            <button class="no-padding" (click)="save()">
+                <mat-icon>save</mat-icon>
+            </button>
           </span>
           
           <span class="ql-formats">
