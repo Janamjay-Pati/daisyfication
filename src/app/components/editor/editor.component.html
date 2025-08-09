@@ -5,55 +5,55 @@
         </button>
     </span>
     <span class="options" [ngStyle]="toolbarHidden ? {visibility: 'hidden'} : {}">
-        <span class="ql-formats">
-            <button class="ql-bold"></button>
-            <button class="ql-italic"></button>
-            <button class="ql-underline"></button>
-            <span class="ql-formats" style="position: relative;">
-                <button mat-icon-button type="button" style="position: relative; z-index: 1;">
-                    <mat-icon>palette</mat-icon>
-                    <input
-                    type="color"
-                    [(ngModel)]="selectedColor"
-                    (change)="applyColor($event)"
-                    style="
-                        position: absolute;
-                        left: 0;
-                        top: 0;
-                        width: 100%;
-                        height: 100%;
-                        opacity: 0;
-                        cursor: pointer;
-                    "
-                    />
-                </button>
-            </span>
-          </span>
-          
-          <span class="ql-formats">
-            <button class="ql-blockquote"></button>
-            <button class="ql-list" value="ordered"></button>
-            <button class="ql-list" value="bullet"></button>
-          </span>
-          
-          <span class="ql-formats">
-            <button class="ql-link"></button>
-            <button class="ql-image"></button>
-            <button class="ql-clean"></button>
-          </span>
-
-          <span class="ql-formats">
-            <button class="no-padding" (click)="save()">
-                <mat-icon>save</mat-icon>
-            </button>
-          </span>
-          
-          <span class="ql-formats">
-            <button class="no-padding" (click)="toggleFocusMode()" [ngStyle]="focusMode ? {display: 'none'} : {}">
-                <mat-icon>fullscreen</mat-icon>
-            </button>
-          </span>
-
+        <button class="ql-bold"></button>
+        <button class="ql-italic"></button>
+        <button class="ql-underline"></button>
+        <button mat-icon-button type="button" style="position: relative; z-index: 1;">
+            <mat-icon>palette</mat-icon>
+            <input
+            type="color"
+            [(ngModel)]="selectedColor"
+            (change)="applyColor($event)"
+            style="
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                opacity: 0;
+                cursor: pointer;
+            "
+            />
+        </button>
+        <button mat-icon-button type="button" style="position: relative; z-index: 1; margin-left: 4px;">
+            <mat-icon>highlight</mat-icon>
+            <input
+                type="color"
+                [(ngModel)]="selectedHighlight"
+                (change)="applyHighlight($event)"
+                style="
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    width: 100%;
+                    height: 100%;
+                    opacity: 0;
+                    cursor: pointer;
+                "
+            />
+        </button>
+        <button class="ql-blockquote"></button>
+        <button class="ql-list" value="ordered"></button>
+        <button class="ql-list" value="bullet"></button>
+        <button class="ql-link"></button>
+        <button class="ql-image"></button>
+        <button class="ql-clean"></button>
+        <button class="no-padding" (click)="save()">
+            <mat-icon>save</mat-icon>
+        </button>
+        <button class="no-padding" (click)="toggleFocusMode()" [ngStyle]="focusMode ? {display: 'none'} : {}">
+            <mat-icon>fullscreen</mat-icon>
+        </button>
     </span>
     <span class="open-options" [ngStyle]="!focusMode ? {visibility: 'hidden'} : {}">
         <button class="no-padding" (click)="openOptions()">
@@ -66,7 +66,8 @@
 <quill-editor
     class="editor"
     [(ngModel)]="content"
-    [modules]="modules">
+    [modules]="modules"
+    (onContentChanged)="onContentChanged()">
 </quill-editor>
 </div>
   

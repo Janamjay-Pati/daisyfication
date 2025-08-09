@@ -31,6 +31,12 @@ export class EditorComponent implements OnInit {
   chapterName = '';
   chapterDocId: string | null = null;
   bookDocId: string | null = null;
+  selectedHighlight: string = '#ffff00'; // Default highlight color (yellow)
+  wordColorMap: { [word: string]: string } = {
+  // Example: 'important': '#ffeb3b', 'note': '#90caf9'
+  'important': '#ffeb3b',
+  'note': '#90caf9'
+};
   @ViewChild(QuillEditorComponent) quillEditorComponent!: QuillEditorComponent;
 
   constructor(private router: Router, private route: ActivatedRoute, private snackBar: MatSnackBar) {}
@@ -139,6 +145,52 @@ export class EditorComponent implements OnInit {
         panelClass: ['error-snackbar']
       });
     }
+  }
+
+  applyHighlight(event: any) {
+    const color = event.target.value;
+    const quillEditor = this.quillEditorComponent?.quillEditor;
+    if (quillEditor) {
+      const range = quillEditor.getSelection();
+      if (range && range.length > 0) {
+        quillEditor.format('background', color);
+      } else {
+        // Set background for future input
+        quillEditor.format('background', color);
+      }
+    }
+  }
+
+  private isHighlighting = false;
+
+  onContentChanged() {
+    if (this.isHighlighting) return;
+    this.highlightMappedWords();
+  }
+
+  highlightMappedWords() {
+    const quillEditor = this.quillEditorComponent?.quillEditor;
+    if (!quillEditor) return;
+
+    this.isHighlighting = true;
+
+    const text = quillEditor.getText();
+    const delta = quillEditor.getContents();
+    let index = 0;
+
+    // Remove previous highlights
+    quillEditor.formatText(0, text.length, { background: false });
+
+    Object.entries(this.wordColorMap).forEach(([word, color]) => {
+      const regex = new RegExp(`\\b${word}\\b`, 'gi');
+      let match;
+      while ((match = regex.exec(text)) !== null) {
+        // Only highlight if the match is a whole word
+        quillEditor.formatText(match.index, word.length, { background: color });
+      }
+    });
+
+    this.isHighlighting = false;
   }
 
 }
