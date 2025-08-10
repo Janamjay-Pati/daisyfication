@@ -58,7 +58,10 @@
             <mat-icon>fullscreen</mat-icon>
         </button>
         <button mat-icon-button type="button" (click)="exportToGoogleDocs()" title="Export to Google Docs">
-            <mat-icon>cloud_upload</mat-icon>
+            <mat-icon>description</mat-icon>
+        </button>
+        <button mat-icon-button type="button" (click)="exportToEPUB()" title="Export to Google Docs">
+            <mat-icon>menu_book</mat-icon>
         </button>
     </span>
     <span class="open-options" [ngStyle]="!focusMode ? {visibility: 'hidden'} : {}">

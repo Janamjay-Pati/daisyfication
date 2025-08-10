@@ -12,6 +12,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { WordColorMapComponent } from '../word-color-map/word-color-map.component';
 import { Document, Packer, Paragraph, TextRun, UnderlineType, Numbering, NumberFormat, LevelFormat } from 'docx';
+import JSZip from 'jszip';
 
 @Component({
   selector: 'app-editor',
@@ -253,14 +254,14 @@ export class EditorComponent implements OnInit {
     function createTextRun(text: string, attrs: any): TextRun {
       return new TextRun({
         text: text,
-        bold: !!attrs['bold'],
-        italics: !!attrs['italic'],
-        underline: attrs['underline'] ? { type: UnderlineType.SINGLE } : undefined,
-        strike: !!attrs['strike'],
-        color: typeof attrs['color'] === 'string' ? attrs['color'] : undefined,
-        shading: typeof attrs['background'] === 'string'
-          ? { type: 'clear', fill: attrs['background'] }
-          : undefined,
+        // bold: !!attrs['bold'],
+        // italics: !!attrs['italic'],
+        // underline: attrs['underline'] ? { type: UnderlineType.SINGLE } : undefined,
+        // strike: !!attrs['strike'],
+        // color: typeof attrs['color'] === 'string' ? attrs['color'] : undefined,
+        // shading: typeof attrs['background'] === 'string'
+        //   ? { type: 'clear', fill: attrs['background'] }
+        //   : undefined,
       });
     }
 
@@ -354,6 +355,91 @@ export class EditorComponent implements OnInit {
 
     const blob = await Packer.toBlob(doc);
     saveAs(blob, `${this.chapterName || 'chapter'}.docx`);
+  }
+
+  async exportToEPUB() {
+    const quillEditor = this.quillEditorComponent?.quillEditor;
+    if (!quillEditor) return;
+
+    // Convert Quill HTML to valid XHTML
+    const htmlContent = this.toValidXhtml(quillEditor.root.innerHTML);
+    const title = this.chapterName || 'Chapter';
+    const author = this.bookTitle || '';
+
+    const zip = new JSZip();
+
+    // mimetype (uncompressed)
+    zip.file('mimetype', 'application/epub+zip', { compression: 'STORE' });
+
+    // container.xml
+    zip.file('META-INF/container.xml', `<?xml version="1.0" encoding="UTF-8"?>
+      <container version="1.0" xmlns="urn:oasis:names:tc:opendocument:xmlns:container">
+        <rootfiles>
+          <rootfile full-path="OEBPS/content.opf" media-type="application/oebps-package+xml"/>
+        </rootfiles>
+      </container>`);
+
+    // content.opf
+    zip.file('OEBPS/content.opf', `<?xml version="1.0" encoding="UTF-8"?>
+      <package xmlns="http://www.idpf.org/2007/opf" version="3.0" unique-identifier="bookid" xml:lang="en" xmlns:dc="http://purl.org/dc/elements/1.1/">
+        <metadata>
+          <dc:identifier id="bookid">urn:uuid:${crypto.randomUUID()}</dc:identifier>
+          <dc:title>${title}</dc:title>
+          <dc:creator>${author}</dc:creator>
+          <dc:language>en</dc:language>
+        </metadata>
+        <manifest>
+          <item id="nav" href="nav.xhtml" media-type="application/xhtml+xml" properties="nav"/>
+          <item id="chapter1" href="chapter1.xhtml" media-type="application/xhtml+xml"/>
+        </manifest>
+        <spine>
+          <itemref idref="nav"/>
+          <itemref idref="chapter1"/>
+        </spine>
+      </package>`);
+
+    // nav.xhtml
+    zip.file('OEBPS/nav.xhtml', `<?xml version="1.0" encoding="UTF-8"?>
+  <!DOCTYPE html>
+  <html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:epub="http://www.idpf.org/2007/ops"
+      lang="en"
+      xml:lang="en">
+    <head>
+      <title>Table of Contents</title>
+      <meta charset="UTF-8"/>
+    </head>
+    <body>
+      <nav epub:type="toc" id="toc">
+        <h1>Table of Contents</h1>
+        <ol>
+          <li><a href="chapter1.xhtml">${title}</a></li>
+        </ol>
+      </nav>
+    </body>
+  </html>`);
+
+    // chapter1.xhtml (with fixed HTML)
+    zip.file('OEBPS/chapter1.xhtml', `<?xml version="1.0" encoding="UTF-8"?>
+  <!DOCTYPE html>
+  <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+    <head>
+      <title>${title}</title>
+      <meta charset="UTF-8"/>
+    </head>
+    <body>${htmlContent}</body>
+  </html>`);
+
+    // Generate and download
+    const blob = await zip.generateAsync({ type: 'blob' });
+    saveAs(blob, `${title}.epub`);
+  }
+
+  toValidXhtml(html: string): string {
+    return html
+      .replace(/<br>/g, '<br />')
+      .replace(/<hr>/g, '<hr />')
+      .replace(/<img(.*?)>/g, '<img$1 />');
   }
 
 }
