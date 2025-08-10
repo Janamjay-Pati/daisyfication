@@ -28,6 +28,11 @@ export class EditorComponent implements OnInit {
   modules = {
     toolbar: {
       container: '#custom-toolbar'
+    },
+    history: {
+      delay: 1000,
+      maxStack: 100,
+      userOnly: true
     }
   };
   focusMode = false;
@@ -95,6 +100,20 @@ export class EditorComponent implements OnInit {
     this.wordColorMapList = await this.getWordColorMapList();
     await this.highlightMappedWords();
   }
+
+  undo() {
+  const quillEditor = this.quillEditorComponent?.quillEditor;
+  if (quillEditor) {
+    quillEditor.history.undo();
+  }
+}
+
+redo() {
+  const quillEditor = this.quillEditorComponent?.quillEditor;
+  if (quillEditor) {
+    quillEditor.history.redo();
+  }
+}
 
   onBackArrowClick(focusMode: boolean) {
     if (focusMode) {
