@@ -1,4 +1,6 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
+import htmlToDocx from 'html-to-docx';
+import { saveAs } from 'file-saver';
 import { FormsModule } from '@angular/forms';
 import { QuillEditorComponent } from 'ngx-quill';
 import { CommonModule } from '@angular/common';
@@ -9,6 +11,7 @@ import { db } from './../../services/firebase.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { WordColorMapComponent } from '../word-color-map/word-color-map.component';
+import { Document, Packer, Paragraph, TextRun, UnderlineType, Numbering, NumberFormat, LevelFormat } from 'docx';
 
 @Component({
   selector: 'app-editor',
@@ -234,6 +237,123 @@ export class EditorComponent implements OnInit {
       return acc;
     }, {} as { [word: string]: string });
     return wordColorMapList;
+  }
+
+  async exportToGoogleDocs() {
+    const quillEditor = this.quillEditorComponent?.quillEditor;
+    if (!quillEditor) {
+      console.error('Quill editor not found');
+      return;
+    }
+
+    const delta = quillEditor.getContents();
+    const paragraphs: Paragraph[] = [];
+
+    // Helper to create TextRuns for a given text segment with attributes
+    function createTextRun(text: string, attrs: any): TextRun {
+      return new TextRun({
+        text: text,
+        bold: !!attrs['bold'],
+        italics: !!attrs['italic'],
+        underline: attrs['underline'] ? { type: UnderlineType.SINGLE } : undefined,
+        strike: !!attrs['strike'],
+        color: typeof attrs['color'] === 'string' ? attrs['color'] : undefined,
+        shading: typeof attrs['background'] === 'string'
+          ? { type: 'clear', fill: attrs['background'] }
+          : undefined,
+      });
+    }
+
+    // We'll collect lines grouped by their list type and level, so consecutive list items stay in same numbering
+    let currentListType: string | null = null;
+    let currentListLevel = 0;
+    let currentParagraphRuns: TextRun[] = [];
+
+    function pushParagraph() {
+      if (currentParagraphRuns.length === 0) return;
+      let paragraphOptions: any = { children: currentParagraphRuns };
+      if (currentListType === 'ordered') {
+        paragraphOptions.numbering = {
+          reference: 'my-numbering',
+          level: currentListLevel,
+        };
+      } else if (currentListType === 'bullet') {
+        paragraphOptions.bullet = {
+          level: currentListLevel,
+        };
+      }
+      paragraphs.push(new Paragraph(paragraphOptions));
+      currentParagraphRuns = [];
+    }
+
+    for (let i = 0; i < delta.ops.length; i++) {
+      const op = delta.ops[i];
+      if (typeof op.insert !== 'string') continue;
+
+      const attrs = op.attributes || {};
+      const text = op.insert;
+
+      // Split by newlines, but keep newlines as separate segments to handle them correctly
+      const segments = text.split(/(\n)/);
+
+      for (let j = 0; j < segments.length; j++) {
+        const segment = segments[j];
+        if (segment === '\n') {
+          // Newline indicates end of paragraph or list item
+          pushParagraph();
+          currentListType = null;
+          currentListLevel = 0;
+          continue;
+        }
+
+        if (segment.length === 0) continue;
+
+        // Check if this segment has list attribute to set current list context
+        if (attrs['list']) {
+          // If list type changes from previous, push previous paragraph first
+          if (attrs['list'] !== currentListType) {
+            pushParagraph();
+            currentListType = attrs['list'] as string;
+            currentListLevel = 0;
+          }
+        } else {
+          // No list attribute, if previously in a list, push paragraph and reset
+          if (currentListType !== null) {
+            pushParagraph();
+            currentListType = null;
+            currentListLevel = 0;
+          }
+        }
+
+        // Create TextRun for this segment and add to current paragraph runs
+        currentParagraphRuns.push(createTextRun(segment, attrs));
+      }
+    }
+
+    // Push any remaining paragraph runs
+    pushParagraph();
+
+    const doc = new Document({
+      numbering: {
+        config: [
+          {
+            reference: 'my-numbering',
+            levels: [
+              {
+                level: 0,
+                format: NumberFormat.DECIMAL,
+                text: '%1.',
+                alignment: 'start',
+              },
+            ],
+          },
+        ],
+      },
+      sections: [{ children: paragraphs }]
+    });
+
+    const blob = await Packer.toBlob(doc);
+    saveAs(blob, `${this.chapterName || 'chapter'}.docx`);
   }
 
 }

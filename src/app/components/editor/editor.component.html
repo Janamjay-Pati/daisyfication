@@ -57,6 +57,9 @@
         <button class="no-padding" (click)="toggleFocusMode()" [ngStyle]="focusMode ? {display: 'none'} : {}">
             <mat-icon>fullscreen</mat-icon>
         </button>
+        <button mat-icon-button type="button" (click)="exportToGoogleDocs()" title="Export to Google Docs">
+            <mat-icon>cloud_upload</mat-icon>
+        </button>
     </span>
     <span class="open-options" [ngStyle]="!focusMode ? {visibility: 'hidden'} : {}">
         <button class="no-padding" (click)="openOptions()">
