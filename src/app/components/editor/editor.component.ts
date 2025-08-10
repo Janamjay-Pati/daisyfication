@@ -205,15 +205,17 @@ export class EditorComponent implements OnInit {
   }
 
   async addWordMapping() {
+    // Fetch the latest mapping list before opening the dialog
+    const latestWordColorMapList = await this.getWordColorMapList();
     this.dialog.open(WordColorMapComponent, {
       width: '500px',
-      data: { bookDocId: this.bookDocId, wordColorMapList: this.wordColorMapList }
+      data: { bookDocId: this.bookDocId, wordColorMapList: latestWordColorMapList }
     }).afterClosed().subscribe(async (result) => {
       if (result) {
         // Update the wordColorMap with the new mapping
         this.wordColorMap[result.word] = result.color;
         // Reapply highlights
-        this.highlightMappedWords();
+        await this.highlightMapping();
         console.log('Word mapping added:', this.wordColorMap);
       }
     });
