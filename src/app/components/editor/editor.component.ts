@@ -7,6 +7,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { collection, doc, getDocs, updateDoc } from 'firebase/firestore';
 import { db } from './../../services/firebase.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
+import { WordColorMapComponent } from '../word-color-map/word-color-map.component';
 
 @Component({
   selector: 'app-editor',
@@ -32,14 +34,15 @@ export class EditorComponent implements OnInit {
   chapterDocId: string | null = null;
   bookDocId: string | null = null;
   selectedHighlight: string = '#ffff00'; // Default highlight color (yellow)
-  wordColorMap: { [word: string]: string } = {
-  // Example: 'important': '#ffeb3b', 'note': '#90caf9'
-  'important': '#ffeb3b',
-  'note': '#90caf9'
-};
+  wordColorMap: { [word: string]: string } = {};
+  wordColorMapList: { id: string, word: string, color: string }[] = [];
   @ViewChild(QuillEditorComponent) quillEditorComponent!: QuillEditorComponent;
 
-  constructor(private router: Router, private route: ActivatedRoute, private snackBar: MatSnackBar) {}
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog) {}
 
   ngOnInit() {
     // Listen to changes and update word/char count
@@ -80,6 +83,13 @@ export class EditorComponent implements OnInit {
         this.toolbarHidden = false; // Show toolbar again
       }
     });
+
+    this.highlightMapping();
+  }
+
+  async highlightMapping() {
+    this.wordColorMapList = await this.getWordColorMapList();
+    await this.highlightMappedWords();
   }
 
   onBackArrowClick(focusMode: boolean) {
@@ -163,9 +173,10 @@ export class EditorComponent implements OnInit {
 
   private isHighlighting = false;
 
-  onContentChanged() {
+  async onContentChanged() {
     if (this.isHighlighting) return;
-    this.highlightMappedWords();
+    this.wordColorMapList = await this.getWordColorMapList();
+    await this.highlightMappedWords();
   }
 
   highlightMappedWords() {
@@ -191,6 +202,36 @@ export class EditorComponent implements OnInit {
     });
 
     this.isHighlighting = false;
+  }
+
+  async addWordMapping() {
+    this.dialog.open(WordColorMapComponent, {
+      width: '500px',
+      data: { bookDocId: this.bookDocId, wordColorMapList: this.wordColorMapList }
+    }).afterClosed().subscribe(async (result) => {
+      if (result) {
+        // Update the wordColorMap with the new mapping
+        this.wordColorMap[result.word] = result.color;
+        // Reapply highlights
+        this.highlightMappedWords();
+        console.log('Word mapping added:', this.wordColorMap);
+      }
+    });
+  }
+
+  async getWordColorMapList() {
+    if (!this.bookDocId) return [];
+    const wordMapSnapshot = await getDocs(collection(db, 'Books', this.bookDocId, 'WordMap'));
+    const wordColorMapList: { id: string, word: string, color: string }[] = [];
+    wordMapSnapshot.forEach(docSnap => {
+      const data = docSnap.data();
+      wordColorMapList.push({ id: docSnap.id, word: data['word'], color: data['color'] });
+    });
+    this.wordColorMap = wordColorMapList.reduce((acc, item) => {
+      acc[item.word] = item.color;
+      return acc;
+    }, {} as { [word: string]: string });
+    return wordColorMapList;
   }
 
 }

@@ -51,6 +51,9 @@
         <button class="no-padding" (click)="save()">
             <mat-icon>save</mat-icon>
         </button>
+        <button mat-icon-button type="button" style="position: relative; z-index: 1;" (click)="addWordMapping()">
+            <mat-icon>map</mat-icon>
+        </button>
         <button class="no-padding" (click)="toggleFocusMode()" [ngStyle]="focusMode ? {display: 'none'} : {}">
             <mat-icon>fullscreen</mat-icon>
         </button>
