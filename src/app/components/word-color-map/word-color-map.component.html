@@ -31,20 +31,29 @@
     <hr style="margin: 12px 0;">
   </div>
   <!-- Form for new mapping -->
-  <div style="display: flex; align-items: center; gap: 12px;">
+  <div style="display: flex; align-items: center; gap: 12px; position: relative;">
     <mat-form-field appearance="fill" style="flex: 1;">
       <mat-label>Word</mat-label>
       <input matInput [(ngModel)]="word">
     </mat-form-field>
-    <button mat-icon-button type="button" [style.color]="selectedColor" (click)="openColorPicker()">
-      <mat-icon>palette</mat-icon>
-    </button>
-    <input
-      #colorInput
-      type="color"
-      [(ngModel)]="selectedColor"
-      style="display: none;"
-    />
+    <div style="position: relative;">
+      <button mat-icon-button type="button" [style.color]="selectedColor">
+        <mat-icon>palette</mat-icon>
+      </button>
+      <input
+        type="color"
+        [(ngModel)]="selectedColor"
+        style="
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 40px;
+          height: 40px;
+          opacity: 0;
+          cursor: pointer;
+        "
+      />
+    </div>
   </div>
 </div>
 <div mat-dialog-actions class="actions">
