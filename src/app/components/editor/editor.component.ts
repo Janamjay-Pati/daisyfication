@@ -13,17 +13,21 @@ import { MatDialog } from '@angular/material/dialog';
 import { WordColorMapComponent } from '../word-color-map/word-color-map.component';
 import { Document, Packer, Paragraph, TextRun, UnderlineType, Numbering, NumberFormat, LevelFormat } from 'docx';
 import JSZip from 'jszip';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-editor',
   standalone: true,
-  imports: [CommonModule, MatIconModule, FormsModule, QuillEditorComponent],
+  imports: [CommonModule, MatIconModule, MatButtonModule, MatFormFieldModule, MatInputModule, FormsModule, QuillEditorComponent],
   templateUrl: './editor.component.html',
   styleUrl: './editor.component.scss'
 })
 export class EditorComponent implements OnInit {
   content = '';
   selectedColor = '#000000';
+  isFindAndReplaceActive = false;
   toolbarHidden = false;
   darkMode = false;
   modules = {
@@ -103,18 +107,18 @@ export class EditorComponent implements OnInit {
   }
 
   undo() {
-  const quillEditor = this.quillEditorComponent?.quillEditor;
-  if (quillEditor) {
-    quillEditor.history.undo();
+    const quillEditor = this.quillEditorComponent?.quillEditor;
+    if (quillEditor) {
+      quillEditor.history.undo();
+    }
   }
-}
 
-redo() {
-  const quillEditor = this.quillEditorComponent?.quillEditor;
-  if (quillEditor) {
-    quillEditor.history.redo();
+  redo() {
+    const quillEditor = this.quillEditorComponent?.quillEditor;
+    if (quillEditor) {
+      quillEditor.history.redo();
+    }
   }
-}
 
   onBackArrowClick(focusMode: boolean) {
     if (focusMode) {
@@ -139,6 +143,10 @@ redo() {
       else if ((document as any).webkitExitFullscreen) (document as any).webkitExitFullscreen();
       else if ((document as any).msExitFullscreen) (document as any).msExitFullscreen();
     }
+  }
+
+  toggleFindAndReplace() {
+    this.isFindAndReplaceActive = !this.isFindAndReplaceActive;
   }
 
   openOptions() {
@@ -468,6 +476,51 @@ redo() {
       document.body.classList.add('dark-mode');
     } else {
       document.body.classList.remove('dark-mode');
+    }
+  }
+
+  findText(searchTerm: string): number[] {
+    const quillEditor = this.quillEditorComponent?.quillEditor;
+    if (!quillEditor || !searchTerm) return [];
+    const text = quillEditor.getText();
+
+    // Treat the search term as a case-insensitive pattern
+    const regex = new RegExp(searchTerm, 'gi');
+    let match;
+    const indexes: number[] = [];
+
+    // Apply highlight using the 'user' source so the history module will record it
+    while ((match = regex.exec(text)) !== null) {
+      indexes.push(match.index);
+      quillEditor.formatText(match.index, match[0].length, { background: '#ffeb3b' }, 'user');
+    }
+
+    return indexes;
+  }
+
+  replaceText(searchTerm: string, replaceTerm: string) {
+    const quillEditor = this.quillEditorComponent?.quillEditor;
+    if (!quillEditor || !searchTerm) return;
+
+    const text = quillEditor.getText();
+    const regex = new RegExp(searchTerm, 'gi');
+    let match;
+    const matches: { index: number, length: number }[] = [];
+
+    // Collect all matches first (so indices remain stable), then replace from end -> start
+    while ((match = regex.exec(text)) !== null) {
+      matches.push({ index: match.index, length: match[0].length });
+    }
+
+    // Replace in reverse order to avoid shifting indexes for subsequent replacements
+    for (let i = matches.length - 1; i >= 0; i--) {
+      const m = matches[i];
+      // Use the 'user' source so the history module picks up the deletion and insertion (undo/redo works)
+      quillEditor.deleteText(m.index, m.length, 'user');
+      if (replaceTerm !== undefined && replaceTerm !== null) {
+        // insertText signature: (index, text, formats?, source?) -> provide empty formats object then source
+        quillEditor.insertText(m.index, replaceTerm, {}, 'user');
+      }
     }
   }
 

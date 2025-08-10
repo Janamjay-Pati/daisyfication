@@ -52,6 +52,15 @@
   padding: 0;
 }
 
+.chapter-name {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #666;
+  text-align: center;
+  background: #fff;
+  padding: 1rem 0;
+}
+
 .word-count {
   position: absolute;
   bottom: 10px;
@@ -63,8 +72,7 @@
 
 :host ::ng-deep .ql-container {
   background: #fff;
-  height: calc(100vh - 3rem);
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+  height: calc(100vh - 6.25rem);
   border: none;
   padding: 2rem 0;
 }
