@@ -25,6 +25,7 @@ export class EditorComponent implements OnInit {
   content = '';
   selectedColor = '#000000';
   toolbarHidden = false;
+  darkMode = false;
   modules = {
     toolbar: {
       container: '#custom-toolbar'
@@ -459,6 +460,15 @@ redo() {
       .replace(/<br>/g, '<br />')
       .replace(/<hr>/g, '<hr />')
       .replace(/<img(.*?)>/g, '<img$1 />');
+  }
+
+  toggleDarkMode() {
+    this.darkMode = !this.darkMode;
+    if (this.darkMode) {
+      document.body.classList.add('dark-mode');
+    } else {
+      document.body.classList.remove('dark-mode');
+    }
   }
 
 }

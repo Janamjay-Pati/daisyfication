@@ -1,6 +1,6 @@
 <div id="custom-toolbar">
     <span class="go-back">
-        <button class="no-padding" (click)="onBackArrowClick(focusMode)">
+        <button (click)="onBackArrowClick(focusMode)">
             <mat-icon>keyboard_arrow_left</mat-icon>
         </button>
     </span>
@@ -54,14 +54,11 @@
         <button type="button" (click)="redo()" mat-icon-button>
             <mat-icon>redo</mat-icon>
         </button>
-        <button class="no-padding" (click)="save()">
+        <button (click)="save()">
             <mat-icon>save</mat-icon>
         </button>
         <button mat-icon-button type="button" style="position: relative; z-index: 1;" (click)="addWordMapping()">
             <mat-icon>map</mat-icon>
-        </button>
-        <button class="no-padding" (click)="toggleFocusMode()" [ngStyle]="focusMode ? {display: 'none'} : {}">
-            <mat-icon>fullscreen</mat-icon>
         </button>
         <button mat-icon-button type="button" (click)="exportToGoogleDocs()" title="Export to Google Docs">
             <mat-icon>description</mat-icon>
@@ -69,9 +66,15 @@
         <button mat-icon-button type="button" (click)="exportToEPUB()" title="Export to Google Docs">
             <mat-icon>menu_book</mat-icon>
         </button>
+        <button type="button" (click)="toggleDarkMode()" mat-icon-button [title]="darkMode ? 'Light Mode' : 'Dark Mode'">
+            <mat-icon>{{ darkMode ? 'light_mode' : 'dark_mode' }}</mat-icon>
+        </button>
+        <button (click)="toggleFocusMode()" [ngStyle]="focusMode ? {display: 'none'} : {}">
+            <mat-icon>fullscreen</mat-icon>
+        </button>
     </span>
     <span class="open-options" [ngStyle]="!focusMode ? {visibility: 'hidden'} : {}">
-        <button class="no-padding" (click)="openOptions()">
+        <button (click)="openOptions()">
             <mat-icon>more_vert</mat-icon>
         </button>
     </span>

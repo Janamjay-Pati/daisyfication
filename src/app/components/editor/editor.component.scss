@@ -75,3 +75,36 @@
   line-height: 1.6;
   outline: none;
 }
+
+body.dark-mode {
+  .editor {
+    background: #1e1e1e;
+    color: #e0e0e0;
+  }
+
+  #custom-toolbar {
+    background: #2c2c2c;
+    border-bottom: 1px solid #444;
+  }
+
+  :host ::ng-deep .ql-container {
+    background-color: #2c2c2c;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+  }
+
+  :host ::ng-deep .ql-editor {
+    color: #e0e0e0;
+  }
+
+  .word-count {
+    color: #bbb;
+  }
+
+  button, select {
+    color: #e0e0e0;
+  }
+
+  mat-icon {
+    color: #e0e0e0;
+  }
+}
